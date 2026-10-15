@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>പേപ്പർ ഏജൻസി മാനേജ്മെന്റ്</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <div class="container my-4">
+        <h2 class="text-center mb-4">📰 പേപ്പർ ഡിസ്ട്രിബ്യൂഷൻ ആപ്പ്</h2>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="papers-tab" data-bs-toggle="tab" data-bs-target="#papers" type="button" role="tab">പത്രങ്ങൾ & വില</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="customers-tab" data-bs-toggle="tab" data-bs-target="#customers" type="button" role="tab">കസ്റ്റമർ രജിസ്ട്രേഷൻ</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="billing-tab" data-bs-toggle="tab" data-bs-target="#billing" type="button" role="tab">പ്രതിമാസ ബില്ലിംഗ്</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="backup-tab" data-bs-toggle="tab" data-bs-target="#backup" type="button" role="tab">ബാക്ക്അപ്പ് & റിക്കവറി</button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="myTabContent">
+            
+            <!-- 1. Papers & Price Section -->
+            <div class="tab-pane fade show active" id="papers" role="tabpanel">
+                <div class="card p-4 shadow-sm">
+                    <h4>പത്രങ്ങളുടെ വിവരങ്ങൾ ചേർക്കുക</h4>
+                    <form id="paperForm" class="row g-3 mt-2">
+                        <div class="col-md-5">
+                            <label class="form-label">പത്രത്തിന്റെ പേര്</label>
+                            <input type="text" class="form-control" id="paperName" placeholder="ഉദാ: മാതൃഭൂമി" required>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label">വില (പ്രതിമാസം)</label>
+                            <input type="number" class="form-control" id="paperPrice" placeholder="തുക നൽകുക" required>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">ചേർക്കുക</button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+                    <h5>നിലവിലുള്ള പത്രങ്ങൾ</h5>
+                    <ul id="paperList" class="list-group mt-2">
+                        <!-- Dynamic Papers will load here -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 2. Customer Registration Section -->
+            <div class="tab-pane fade" id="customers" role="tabpanel">
+                <div class="card p-4 shadow-sm">
+                    <h4>പുതിയ കസ്റ്റമറെ ചേർക്കുക</h4>
+                    <form id="customerForm" class="row g-3 mt-2">
+                        <div class="col-md-6">
+                            <label class="form-label">കസ്റ്റമറുടെ പേര്</label>
+                            <input type="text" class="form-control" id="custName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">ഫോൺ നമ്പർ (WhatsApp)</label>
+                            <input type="text" class="form-control" id="custPhone" placeholder="919846xxxxxx" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">വീട്ടുപേര് / വിലാസം</label>
+                            <textarea class="form-control" id="custAddress" rows="2" required></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">എടുക്കുന്ന പത്രം</label>
+                            <select class="form-select" id="custPaper" required>
+                                <option value="" selected disabled>പത്രം തിരഞ്ഞെടുക്കുക</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-success">റജിസ്റ്റർ ചെയ്യുക</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 3. Billing Section -->
+            <div class="tab-pane fade" id="billing" role="tabpanel">
+                <div class="card p-4 shadow-sm">
+                    <h4>പ്രതിമാസ ബില്ലും വാട്സാപ്പ് മെസ്സേജും</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped mt-3">
+                            <thead>
+                                <tr>
+                                    <th>പേര്</th>
+                                    <th>ഫോൺ</th>
+                                    <th>വിലാസം</th>
+                                    <th>പത്രം</th>
+                                    <th>തുക</th>
+                                    <th>വാട്സാപ്പ് അയക്കുക</th>
+                                </tr>
+                            </thead>
+                            <tbody id="billingTableBody">
+                                <!-- Dynamic Billing data will load here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Backup & Recovery Section -->
+            <div class="tab-pane fade" id="backup" role="tabpanel">
+                <div class="card p-4 shadow-sm">
+                    <h4>ഡാറ്റ ബാക്ക്അപ്പ് & റിക്കവറി (Backup & Restore)</h4>
+                    <p class="text-muted">ഫോൺ മാറ്റുമ്പോഴോ ഡാറ്റ നഷ്ടപ്പെടുമ്പോഴോ ഉപയോഗിക്കാൻ നിങ്ങളുടെ ആപ്പ് ഡാറ്റ ബാക്ക്അപ്പ് എടുക്കാം.</p>
+                    
+                    <div class="mb-3">
+                        <button class="btn btn-warning" onclick="exportData()">📥 ബാക്ക്അപ്പ് ഫയൽ ഡൗൺലോഡ് ചെയ്യുക (Export)</button>
+                    </div>
+
+                    <hr>
+
+                    <div class="mb-3">
+                        <label class="form-label">മുൻപ് എടുത്ത ബാക്ക്അപ്പ് ഫയൽ തിരഞ്ഞെടുക്കുക (Import)</label>
+                        <input type="file" class="form-control" id="importFile" accept=".json" onchange="importData(event)">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- App Logic Script -->
+    <script>
+        // LocalStorage-ൽ നിന്ന് ഡാറ്റ എടുക്കുക അല്ലെങ്കിൽ ഒഴിഞ്ഞ ലിങ്ക് കൊടുക്കുക
+        let papers = JSON.parse(localStorage.getItem('agency_papers')) || [];
+        let customers = JSON.parse(localStorage.getItem('agency_customers')) || [];
+
+        // പേപ്പർ ഫോം സബ്മിറ്റ് ചെയ്യുമ്പോൾ
+        document.getElementById('paperForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('paperName').value;
+            const price = document.getElementById('paperPrice').value;
+
+            papers.push({ name, price });
+            localStorage.setItem('agency_papers', JSON.stringify(papers));
+            
+            alert('പത്രം വിജയകരമായി ചേർത്തു!');
+            document.getElementById('paperForm').reset();
+            loadPapers();
+            loadPaperDropdown();
+        });
+
+        // കസ്റ്റമർ ഫോം സബ്മിറ്റ് ചെയ്യുമ്പോൾ
+        document.getElementById('customerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            const address = document.getElementById('custAddress').value;
+            const paper = document.getElementById('custPaper').value;
+
+            customers.push({ name, phone, address, paper });
+            localStorage.setItem('agency_customers', JSON.stringify(customers));
+
+            alert('കസ്റ്റമർ രജിസ്ട്രേഷൻ വിജയകരമായി പൂർത്തിയായി!');
+            document.getElementById('customerForm').reset();
+            loadBillingTable();
+        });
+
+        // പത്രങ്ങളുടെ ലിസ്റ്റ് ലോഡ് ചെയ്യാൻ
+        function loadPapers() {
+            const list = document.getElementById('paperList');
+            list.innerHTML = '';
+            papers.forEach((p, index) => {
+                list.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${p.name} - ₹${p.price}
+                    <button class="btn btn-danger btn-sm" onclick="deletePaper(${index})">കളയുക</button>
+                </li>`;
+            });
+        }
+
+        // പത്രം ഡ്രോപ്പ്ഡൗൺ ലോഡ് ചെയ്യാൻ
+        function loadPaperDropdown() {
+            const select = document.getElementById('custPaper');
+            select.innerHTML = '<option value="" selected disabled>പത്രം തിരഞ്ഞെടുക്കുക</option>';
+            papers.forEach(p => {
+                select.innerHTML += `<option value="${p.name}">${p.name} (₹${p.price})</option>`;
+            });
+        }
+
+        // പത്രം ഡിലീറ്റ് ചെയ്യാൻ
+        function deletePaper(index) {
+            papers.splice(index, 1);
+            localStorage.setItem('agency_papers', JSON.stringify(papers));
+            loadPapers();
+            loadPaperDropdown();
+        }
+
+        // ബില്ലിംഗ് ടേബിൾ ലോഡ് ചെയ്യാൻ (WhatsApp ലിങ്കോട് കൂടി)
+        function loadBillingTable() {
+            const tbody = document.getElementById('billingTableBody');
+            tbody.innerHTML = '';
+
+            if (customers.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">കസ്റ്റമർമാർ ആരും ഇല്ല</td></tr>`;
+                return;
+            }
+
+            customers.forEach(c => {
+                // പത്രത്തിന്റെ വില കണ്ടെത്തുക
+                const matchedPaper = papers.find(p => p.name === c.paper);
+                const price = matchedPaper ? matchedPaper.price : 0;
+                
+                const message = encodeURIComponent(`നമസ്കാരം ${c.name}, ഈ മാസത്തെ പത്ര ബിൽ തുക ₹${price} ആണ്. കൃത്യസമയത്ത് അടയ്ക്കാൻ അഭ്യർത്ഥിക്കുന്നു.`);
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${c.name}</td>
+                        <td>${c.phone}</td>
+                        <td>${c.address}</td>
+                        <td>${c.paper}</td>
+                        <td>₹ ${price}</td>
+                        <td>
+                            <a href="https://wa.me/${c.phone}?text=${message}" class="btn btn-success btn-sm" target="_blank">
+                                📲 WhatsApp അയക്കുക
+                            </a>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // ഡാറ്റ ബാക്ക്അപ്പ് ഡൗൺലോഡ് ചെയ്യാൻ (Export)
+        function exportData() {
+            const data = {
+                papers: papers,
+                customers: customers
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", "paper_agency_backup.json");
+            dlAnchorElem.click();
+        }
+
+        // ബാക്ക്അപ്പ് ഫയൽ തിരിച്ച് അപ്‌ലോഡ് ചെയ്യാൻ (Import)
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const content = JSON.parse(e.target.result);
+                    if (content.papers && content.customers) {
+                        papers = content.papers;
+                        customers = content.customers;
+                        
+                        localStorage.setItem('agency_papers', JSON.stringify(papers));
+                        localStorage.setItem('agency_customers', JSON.stringify(customers));
+                        
+                        loadPapers();
+                        loadPaperDropdown();
+                        loadBillingTable();
+                        
+                        alert('ഡാറ്റ വിജയകരമായി തിരിച്ചെടുത്തു (Restore ചെയ്തു)!');
+                    } else {
+                        alert('തെറ്റായ ഫയൽ ഫോർമാറ്റ്!');
+                    }
+                } catch (error) {
+                    alert('ഫയൽ റീഡ് ചെയ്യുന്നതിൽ തടസ്സം നേരിട്ടു.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // പേജ് ലോഡ് ചെയ്യുമ്പോൾ ഡാറ്റ കാണിക്കാൻ
+        window.onload = function() {
+            loadPapers();
+            loadPaperDropdown();
+            loadBillingTable();
+        };
+    </script>
+</body>
+</html>
