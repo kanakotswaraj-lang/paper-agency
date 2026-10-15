@@ -6,87 +6,68 @@
     <title>പേപ്പർ ഏജൻസി മാനേജ്മെന്റ്</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts for Malayalam -->
-    <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Manjari&display=swap" rel="stylesheet">
+    <!-- Clean Readable Malayalam Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Manjari', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Noto Sans Malayalam', sans-serif;
+            background: #f0f2f5;
             min-height: 100vh;
+            color: #212529;
         }
-        .navbar-brand, h2, h4, h5 {
-            font-weight: bold;
+        h2, h4, h5, label, th, td, .nav-link, .btn {
+            font-weight: 600 !important;
         }
         .card {
             border: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            background: #ffffff;
         }
         .nav-pills .nav-link {
-            border-radius: 30px;
-            font-weight: bold;
+            border-radius: 8px;
             color: #495057;
-            transition: all 0.3s ease;
+            background: #e9ecef;
+            margin: 0 3px;
         }
         .nav-pills .nav-link.active {
-            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            background: #0d6efd;
             color: white;
-            box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
-        }
-        .btn-primary {
-            background: linear-gradient(45deg, #1d976c, #93f9b9);
-            border: none;
-            color: #000;
-            font-weight: bold;
-        }
-        .btn-success {
-            background: linear-gradient(45deg, #11998e, #38ef7d);
-            border: none;
-            font-weight: bold;
         }
         .app-header {
-            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            background: #1e1e2f;
             color: white;
             padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(78, 84, 200, 0.3);
+            border-radius: 12px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
-<body class="py-4">
+<body class="py-3">
 
     <div class="container">
         <!-- App Header -->
         <div class="app-header text-center">
             <h2>📰 പേപ്പർ ഡിസ്ട്രിബ്യൂഷൻ ആപ്പ്</h2>
-            <p class="mb-0">നിങ്ങളുടെ ഏജൻസി കണക്കുകൾ എളുപ്പത്തിൽ കൈകാര്യം ചെയ്യാം</p>
+            <p class="mb-0 text-light">ഏജൻസി കണക്കുകൾ കൃത്യമായി സൂക്ഷിക്കാം</p>
         </div>
 
         <!-- Navigation Tabs -->
-        <ul class="nav nav-pills justify-content-center mb-4 gap-2" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="papers-tab" data-bs-toggle="tab" data-bs-target="#papers" type="button" role="tab">പത്രങ്ങൾ & വില</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="customers-tab" data-bs-toggle="tab" data-bs-target="#customers" type="button" role="tab">കസ്റ്റമർ രജിസ്ട്രേഷൻ</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="billing-tab" data-bs-toggle="tab" data-bs-target="#billing" type="button" role="tab">പ്രതിമാസ ബില്ലിംഗ്</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="backup-tab" data-bs-toggle="tab" data-bs-target="#backup" type="button" role="tab">ബാക്ക്അപ്പ് & റിക്കവറി</button>
-            </li>
+        <ul class="nav nav-pills justify-content-center mb-3" id="myTab" role="tablist">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#papers" type="button">പത്രങ്ങൾ</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#customers" type="button">കസ്റ്റമർ</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#daily" type="button">ദിവസേന മാർക്ക്</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#billing" type="button">ബില്ലിംഗ് & കളക്ഷൻ</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#backup" type="button">ബാക്ക്അപ്പ്</button></li>
         </ul>
 
         <!-- Tab Content -->
-        <div class="tab-content" id="myTabContent">
-            <!-- 1. Papers & Price Section -->
-            <div class="tab-pane fade show active" id="papers" role="tabpanel">
+        <div class="tab-content">
+            <!-- 1. Papers -->
+            <div class="tab-pane fade show active" id="papers">
                 <div class="card p-4">
-                    <h4 class="text-primary mb-3"> പുതിയ പത്രങ്ങൾ ചേർക്കുക</h4>
-                    <form id="paperForm" class="row g-3">
+                    <h4 class="text-primary mb-3">പുതിയ പത്രങ്ങൾ ചേർക്കുക</h4>
+                    <form id="paperForm" class="row g-3" onsubmit="addPaper(event)">
                         <div class="col-md-5">
                             <label class="form-label">പത്രത്തിന്റെ പേര്</label>
                             <input type="text" class="form-control" id="paperName" placeholder="ഉദാ: മാതൃഭൂമി" required>
@@ -101,17 +82,15 @@
                     </form>
                     <hr class="my-4">
                     <h5 class="text-secondary">നിലവിലുള്ള പത്രങ്ങൾ</h5>
-                    <ul id="paperList" class="list-group mt-2">
-                        <!-- Dynamic Papers will load here -->
-                    </ul>
+                    <ul id="paperList" class="list-group mt-2"></ul>
                 </div>
             </div>
 
-            <!-- 2. Customer Registration Section -->
-            <div class="tab-pane fade" id="customers" role="tabpanel">
+            <!-- 2. Customers -->
+            <div class="tab-pane fade" id="customers">
                 <div class="card p-4">
-                    <h4 class="text-success mb-3"> പുതിയ കസ്റ്റമറെ ചേർക്കുക</h4>
-                    <form id="customerform" class="row g-3">
+                    <h4 class="text-success mb-3">പുതിയ കസ്റ്റമറെ ചേർക്കുക</h4>
+                    <form id="customerForm" class="row g-3" onsubmit="addCustomer(event)">
                         <div class="col-md-6">
                             <label class="form-label">കസ്റ്റമറുടെ പേര്</label>
                             <input type="text" class="form-control" id="custName" required>
@@ -126,8 +105,14 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">എടുക്കുന്ന പത്രം</label>
-                            <select class="form-select" id="custPaper" required>
-                                <option value="" selected disabled>പത്രം തിരഞ്ഞെടുക്കുക</option>
+                            <select class="form-select" id="custPaper" required><option value="">പത്രം തിരഞ്ഞെടുക്കുക</option></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">പേയ്‌മെന്റ് രീതി</label>
+                            <select class="form-select" id="payType" required>
+                                <option value="Monthly">പ്രതിമാസം (Monthly)</option>
+                                <option value="Weekly">ആഴ്ചതോറും (Weekly)</option>
+                                <option value="Daily">ദിവസേന (Daily)</option>
                             </select>
                         </div>
                         <div class="col-12">
@@ -137,51 +122,160 @@
                 </div>
             </div>
 
-            <!-- 3. Billing Section -->
-            <div class="tab-pane fade" id="billing" role="tabpanel">
+            <!-- 3. Daily Marking Section -->
+            <div class="tab-pane fade" id="daily" role="tabpanel">
                 <div class="card p-4">
-                    <h4 class="text-info mb-3">പ്രതിമാസ ബില്ലും വാട്സാപ്പ് അയക്കലും</h4>
+                    <h4 class="text-info mb-3">📅 ഇന്നത്തെ പത്രം നൽകിയത് മാർക്ക് ചെയ്യുക</h4>
+                    <p class="text-muted small">ഓരോ കസ്റ്റമേഴ്സിനും ഇന്ന് പത്രം നൽകിയിട്ടുണ്ടെങ്കിൽ ടിക്ക് ചെയ്യുക.</p>
                     <div class="table-responsive">
-                        <table class="table table-striped align-middle mt-3">
+                        <table class="table table-bordered align-middle">
                             <thead class="table-dark">
                                 <tr>
                                     <th>പേര്</th>
-                                    <th>ഫോൺ</th>
-                                    <th>വിലാസം</th>
                                     <th>പത്രം</th>
-                                    <th>തുക</th>
-                                    <th>വാട്സാപ്പ് അയക്കുക</th>
+                                    <th>ഇന്നത്തെ ഡെെവറി (✔)</th>
                                 </tr>
                             </thead>
-                            <tbody id="billingTableBody">
-                                <!-- Dynamic Billing data will load here -->
-                            </tbody>
+                            <tbody id="dailyTableBody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- 4. Backup & Recovery Section -->
-            <div class="tab-pane fade" id="backup" role="tabpanel">
+            <!-- 4. Billing & Collection Section -->
+            <div class="tab-pane fade" id="billing" role="tabpanel">
+                <div class="card p-4">
+                    <h4 class="text-warning mb-3">💰 ബില്ലിംഗും കളക്ഷനും (പ്രതിമാസ/ആഴ്ച/ദിവസം)</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>പേര്</th>
+                                    <th>ഫോൺ</th>
+                                    <th>പത്രം</th>
+                                    <th>രീതി</th>
+                                    <th>തുക</th>
+                                    <th>സ്റ്റാറ്റസ് / വാട്സാപ്പ്</th>
+                                </tr>
+                            </thead>
+                            <tbody id="billingTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Backup -->
+            <div class="tab-pane fade" id="backup">
                 <div class="card p-4 text-center">
-                    <h4 class="text-warning mb-3"> ഡാറ്റ ബാക്ക്അപ്പും റിക്കവറിയും</h4>
-                    <p class="text-muted">നിങ്ങളുടെ ഡാറ്റ നഷ്ടപ്പെടാതെ സൂക്ഷിക്കാൻ ഫയൽ ഡൗൺലോഡ് ചെയ്യുകയോ റിക്കവർ ചെയ്യുകയോ ചെയ്യാം.</p>
+                    <h4 class="text-secondary mb-3">ഡാറ്റ ബാക്ക്അപ്പും റിക്കവറിയും</h4>
                     <div class="d-flex justify-content-center gap-3 mt-3">
-                        <button class="btn btn-outline-primary" onclick="exportData()">📥 ബാക്ക്അപ്പ് ഡൗൺലോഡ് ചെയ്യുക</button>
+                        <button class="btn btn-outline-primary" onclick="exportData()">📥 ബാക്ക്അപ്പ് ഡൗൺലോഡ്</button>
                         <input type="file" id="importFile" class="d-none" onchange="importData(event)">
-                        <button class="btn btn-outline-success" onclick="document.getElementById('importFile').click()">📤 ഡാറ്റ റിക്കവർ ചെയ്യുക</button>
+                        <button class="btn btn-outline-success" onclick="document.getElementById('importFile').click()">📤 ഡാറ്റ റിക്കവർ</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // LocalStorage logic can remain same or be expanded here
-        // Initial setup check
-        console.log("Colorful Paper Agency App Loaded Successfully!");
+        // Data management via LocalStorage
+        let papers = JSON.parse(localStorage.getItem('papers')) || [];
+        let customers = JSON.parse(localStorage.getItem('customers')) || [];
+
+        function saveData() {
+            localStorage.setItem('papers', JSON.stringify(papers));
+            localStorage.setItem('customers', JSON.stringify(customers));
+            loadAppData();
+        }
+
+        function addPaper(e) {
+            e.preventDefault();
+            let name = document.getElementById('paperName').value;
+            let price = document.getElementById('paperPrice').value;
+            papers.push({ name, price: Number(price) });
+            document.getElementById('paperForm').reset();
+            saveData();
+        }
+
+        function addCustomer(e) {
+            e.preventDefault();
+            let name = document.getElementById('custName').value;
+            let phone = document.getElementById('custPhone').value;
+            let address = document.getElementById('custAddress').value;
+            let paper = document.getElementById('custPaper').value;
+            let payType = document.getElementById('payType').value;
+            customers.push({ name, phone, address, paper, payType, paid: false });
+            document.getElementById('customerForm').reset();
+            saveData();
+            alert('കസ്റ്റമറെ വിജയകരമായി ചേർത്തു!');
+        }
+
+        function loadAppData() {
+            // Load Papers
+            let paperList = document.getElementById('paperList');
+            let custPaper = document.getElementById('custPaper');
+            paperList.innerHTML = '';
+            custPaper.innerHTML = '<option value="">പത്രം തിരഞ്ഞെടുക്കുക</option>';
+            
+            papers.forEach((p, index) => {
+                paperList.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center">${p.name} <span>₹${p.price}/മാസം</span></li>`;
+                custPaper.innerHTML += `<option value="${p.name}">${p.name} (₹${p.price})</option>`;
+            });
+
+            // Load Daily Marking Table
+            let dailyBody = document.getElementById('dailyTableBody');
+            dailyBody.innerHTML = '';
+            customers.forEach((c, i) => {
+                dailyBody.innerHTML += `<tr>
+                    <td>${c.name}<br><small class="text-muted">${c.address}</small></td>
+                    <td>${c.paper}</td>
+                    <td><input type="checkbox" class="form-check-input" style="width:25px; height:25px;" checked></td>
+                </tr>`;
+            });
+
+            // Load Billing Table
+            let billingBody = document.getElementById('billingTableBody');
+            billingBody.innerHTML = '';
+            customers.forEach((c, i) => {
+                let pObj = papers.find(p => p.name === c.paper);
+                let price = pObj ? pObj.price : 0;
+                billingBody.innerHTML += `<tr>
+                    <td>${c.name}</td>
+                    <td>${c.phone}</td>
+                    <td>${c.paper}</td>
+                    <td><span class="badge bg-secondary">${c.payType}</span></td>
+                    <td>₹${price}</td>
+                    <td><a href="https://wa.me/${c.phone}?text=नमस्ते ${c.name}, നിങ്ങളുടെ പത്ര ബിൽ തുക ₹${price} ആണ്." target="_blank" class="btn btn-sm btn-success">WhatsApp അയക്കുക</a></td>
+                </tr>`;
+            });
+        }
+
+        function exportData() {
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({papers, customers}));
+            let dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", "paper_agency_backup.json");
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+        }
+
+        function importData(event) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let data = JSON.parse(e.target.result);
+                papers = data.papers || [];
+                customers = data.customers || [];
+                saveData();
+                alert('ഡാറ്റ വിജയകരമായി റിക്കവർ ചെയ്തു!');
+            };
+            reader.readAsText(event.target.files[0]);
+        }
+
+        window.onload = loadAppData;
     </script>
 </body>
 </html>
