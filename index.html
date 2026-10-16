@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>പേപ്പർ ഏജൻസി മാനേജ്മെന്റ്</title>
+    <title>പേപ്പർ & മാഗസിൻ ഏജൻസി മാനേജ്മെന്റ്</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Clean Readable Malayalam Font -->
@@ -35,21 +35,22 @@
             color: white;
         }
         .app-header {
-            background: #1e1e2f;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 25px;
+            border-radius: 15px;
             margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.3);
         }
     </style>
 </head>
 <body class="py-3">
 
     <div class="container">
-        <!-- App Header -->
+        <!-- Colorful App Header -->
         <div class="app-header text-center">
             <h2>📰 പേപ്പർ & മാഗസിൻ ഏജൻസി മാനേജ്മെന്റ്</h2>
-            <p class="mb-0 text-light">കണക്കുകളും ബില്ലിംഗും എളുപ്പത്തിൽ കൈകാര്യം ചെയ്യാം</p>
+            <p class="mb-0 text-light">കണക്കുകളും ബില്ലിംഗും അഡ്വാൻസ് പേയ്‌മെന്റും എളുപ്പത്തിൽ കൈകാര്യം ചെയ്യാം</p>
         </div>
 
         <!-- Navigation Tabs -->
@@ -70,11 +71,11 @@
                     <form id="paperForm" class="row g-3" onsubmit="addPaper(event)">
                         <div class="col-md-5">
                             <label class="form-label">പേര് (പത്രം/മാഗസിൻ)</label>
-                            <input type="text" class="form-control" id="paperName" placeholder="ഉദാ: മാതൃഭൂമി / ആഴ്ചപ്പതിപ്പ്" required>
+                            <input type="text" class="form-control" id="paperName" placeholder="ഉദാ: മാതൃഭൂമി" required>
                         </div>
                         <div class="col-md-5">
-                            <label class="form-label">വില (പ്രതിമാസം/അതത് തുക)</label>
-                            <input type="number" class="form-control" id="paperPrice" placeholder="തുക നൽകുക" required>
+                            <label class="form-label">വില (പ്രതിമാസം - ട്രാവലിംഗ് ഉൾപ്പെടെ)</label>
+                            <input type="number" class="form-control" id="paperPrice" placeholder="തുക നൽകുക (ഉദാ: 340)" required>
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary w-100">ചേർക്കുക</button>
@@ -108,9 +109,10 @@
                             <select class="form-select" id="custPaper" required><option value="">തിരഞ്ഞെടുക്കുക</option></select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">പേയ്‌മെന്റ് രീതി</label>
+                            <label class="form-label">പേയ്‌മെന്റ് രീതി / സ്കീം</label>
                             <select class="form-select" id="payType" required>
                                 <option value="Monthly">പ്രതിമാസം (Monthly)</option>
+                                <option value="Advance">അഡ്വാൻസ് സ്കീം (2/3 മാസം ഒന്നിച്ച്)</option>
                                 <option value="Weekly">ആഴ്ചതോറും (Weekly)</option>
                                 <option value="Daily">ദിവസേന (Daily)</option>
                             </select>
@@ -160,7 +162,7 @@
                                     <th>പേര് & ഫോൺ</th>
                                     <th>വിലാസം</th>
                                     <th>പത്രവും തീയതിയും</th>
-                                    <th>രീതി & തുക</th>
+                                    <th>രീതി & തുക (ബാലൻസ്)</th>
                                     <th>മാറ്റങ്ങൾ / വാട്സാപ്പ്</th>
                                 </tr>
                             </thead>
@@ -189,7 +191,7 @@
         <div class="modal-dialog">
             <div class="modal-content p-3">
                 <div class="modal-header">
-                    <h5 class="modal-title">കസ്റ്റമർ വിവരങ്ങൾ എഡിറ്റ് ചെയ്യുക</h5>
+                    <h5 class="modal-title">കസ്റ്റമർ വിവരങ്ങളും ബാലൻസും എഡിറ്റ് ചെയ്യുക</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -205,6 +207,10 @@
                     <div class="mb-3">
                         <label class="form-label">വിലാസം</label>
                         <textarea class="form-control" id="editAddress" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">കുടിശ്ശിക / ബാലൻസ് തുക (₹)</label>
+                        <input type="number" class="form-control" id="editBalance" placeholder="ബാക്കി തുക ഉണ്ടെങ്കിൽ നൽകുക">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">തുടങ്ങിയ തീയതി</label>
@@ -251,7 +257,7 @@
             let startDate = document.getElementById('startDate').value;
             let settleDate = document.getElementById('settleDate').value;
             
-            customers.push({ name, phone, address, paper, payType, startDate, settleDate });
+            customers.push({ name, phone, address, paper, payType, startDate, settleDate, balance: 0 });
             document.getElementById('customerForm').reset();
             saveData();
             alert('കസ്റ്റമറെ വിജയകരമായി ചേർത്തു!');
@@ -283,6 +289,7 @@
             customers.forEach((c, index) => {
                 let pObj = papers.find(p => p.name === c.paper);
                 let price = pObj ? pObj.price : 0;
+                let balance = c.balance || 0;
                 
                 let msg = "";
                 let badgeColor = "bg-secondary";
@@ -291,7 +298,13 @@
                 if (c.payType === 'Monthly') {
                     badgeColor = "bg-primary";
                     typeText = "പ്രതിമാസം";
-                    msg = `നമസ്കാരം ${c.name}, നിങ്ങളുടെ ഈ മാസത്തെ പത്ര ബിൽ തുക ട്രാവലിംഗ് എക്സ്പെൻസ് ഉൾപ്പെടെ ₹${price} ആണ്.`;
+                    let totalDue = price + balance;
+                    msg = `നമസ്കാരം ${c.name}, നിങ്ങളുടെ ഈ മാസത്തെ പത്ര ബിൽ തുക (ട്രാവലിംഗ് ഉൾപ്പെടെ) ₹${price} ആണ്. മുൻപത്തെ കുടിശ്ശിക ബാലൻസ് ₹${balance} ഉൾപ്പെടെ ആകെ നൽകാനുള്ള തുക ₹${totalDue} ആണ്.`;
+                } else if (c.payType === 'Advance') {
+                    badgeColor = "bg-info text-dark";
+                    typeText = "അഡ്വാൻസ് സ്കീം";
+                    let advPrice = price * 3; // ഉദാഹരണത്തിന് 3 മാസത്തേക്ക്
+                    msg = `നമസ്കാരം ${c.name}, നിങ്ങളുടെ അഡ്വാൻസ് സ്കീം പ്രകാരമുള്ള പത്ര ബിൽ തുക ₹${advPrice} ആണ്.`;
                 } else if (c.payType === 'Weekly') {
                     badgeColor = "bg-warning text-dark";
                     typeText = "ആഴ്ചതോറും";
@@ -308,7 +321,7 @@
                     <td><strong>${c.name}</strong><br><small>${c.phone}</small></td>
                     <td>${c.address}</td>
                     <td>${c.paper}<br><small class="text-muted">തുടക്കം: ${c.startDate || '-'}<br>തീർച്ച: ${c.settleDate || '-'}</small></td>
-                    <td><span class="badge ${badgeColor}">${typeText}</span><br><strong>₹${price}</strong></td>
+                    <td><span class="badge ${badgeColor}">${typeText}</span><br><strong>മാസം: ₹${price}</strong><br><span class="text-danger">ബാലൻസ്: ₹${balance}</span></td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary mb-1 w-100" onclick="openEditModal(${index})">✏️ എഡിറ്റ്</button><br>
                         <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-sm btn-success w-100">💬 WhatsApp</a>
@@ -323,6 +336,7 @@
             document.getElementById('editName').value = c.name;
             document.getElementById('editPhone').value = c.phone;
             document.getElementById('editAddress').value = c.address;
+            document.getElementById('editBalance').value = c.balance || 0;
             document.getElementById('editStartDate').value = c.startDate || '';
             document.getElementById('editSettleDate').value = c.settleDate || '';
             
@@ -335,6 +349,7 @@
             customers[index].name = document.getElementById('editName').value;
             customers[index].phone = document.getElementById('editPhone').value;
             customers[index].address = document.getElementById('editAddress').value;
+            customers[index].balance = Number(document.getElementById('editBalance').value) || 0;
             customers[index].startDate = document.getElementById('editStartDate').value;
             customers[index].settleDate = document.getElementById('editSettleDate').value;
             
@@ -343,7 +358,7 @@
             let modalElement = document.getElementById('editModal');
             let modal = bootstrap.Modal.getInstance(modalElement);
             modal.hide();
-            alert('വിവരങ്ങൾ വിജയകരമായി അപ്ഡേറ്റ് ചെയ്തു!');
+            alert('വിവരങ്ങളും ബാലൻസും വിജയകരമായി അപ്ഡേറ്റ് ചെയ്തു!');
         }
 
         function exportData() {
