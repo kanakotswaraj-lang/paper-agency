@@ -50,7 +50,7 @@
         <!-- Colorful App Header -->
         <div class="app-header text-center">
             <h2>📰 പേപ്പർ & മാഗസിൻ ഏജൻസി മാനേജ്മെന്റ്</h2>
-            <p class="mb-0 text-light">കണക്കുകളും ബില്ലിംഗും അഡ്വാൻസ് പേയ്‌മെന്റും എളുപ്പത്തിൽ കൈകാര്യം ചെയ്യാം</p>
+            <p class="mb-0 text-light">സ്മാർട്ട് ബില്ലിംഗും പ്രൊഡക്റ്റ് മാനേജ്മെന്റും</p>
         </div>
 
         <!-- Navigation Tabs -->
@@ -67,14 +67,14 @@
             <!-- 1. Papers & Products -->
             <div class="tab-pane fade show active" id="papers">
                 <div class="card p-4">
-                    <h4 class="text-primary mb-3">പത്രങ്ങളും ആഴ്ചപ്പതിപ്പുകളും (പ്രൊഡക്റ്റുകൾ) ചേർക്കുക</h4>
+                    <h4 class="text-primary mb-3">പത്രങ്ങളും ആഴ്ചപ്പതിപ്പുകളും ചേർക്കുക</h4>
                     <form id="paperForm" class="row g-3" onsubmit="addPaper(event)">
                         <div class="col-md-5">
                             <label class="form-label">പേര് (പത്രം/മാഗസിൻ)</label>
-                            <input type="text" class="form-control" id="paperName" placeholder="ഉദാ: മാതൃഭൂമി" required>
+                            <input type="text" class="form-control" id="paperName" placeholder="ഉദാ: മാതൃഭൂമി ആഴ്ചപ്പതിപ്പ്" required>
                         </div>
                         <div class="col-md-5">
-                            <label class="form-label">വില (പ്രതിമാസം - ട്രാവലിംഗ് ഉൾപ്പെടെ)</label>
+                            <label class="form-label">വില (ട്രാവലിംഗ് ഉൾപ്പെടെ)</label>
                             <input type="number" class="form-control" id="paperPrice" placeholder="തുക നൽകുക (ഉദാ: 340)" required>
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
@@ -112,13 +112,13 @@
                             <label class="form-label">പേയ്‌മെന്റ് രീതി / സ്കീം</label>
                             <select class="form-select" id="payType" required>
                                 <option value="Monthly">പ്രതിമാസം (Monthly)</option>
-                                <option value="Advance">അഡ്വാൻസ് സ്കീം (2/3 മാസം ഒന്നിച്ച്)</option>
+                                <option value="Advance">അഡ്വാൻസ് സ്കീം (ഒന്നിച്ച്)</option>
                                 <option value="Weekly">ആഴ്ചതോറും (Weekly)</option>
                                 <option value="Daily">ദിവസേന (Daily)</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">തുടങ്ങിയ തീയതി (Start Date)</label>
+                            <label class="form-label">ബില്ല് തുടങ്ങുന്ന തീയതി (Start Date)</label>
                             <input type="date" class="form-control" id="startDate" required>
                         </div>
                         <div class="col-md-6">
@@ -135,13 +135,13 @@
             <!-- 3. Daily Marking Section -->
             <div class="tab-pane fade" id="daily" role="tabpanel">
                 <div class="card p-4">
-                    <h4 class="text-info mb-3">📅 ഇന്നത്തെ പത്രം നൽകിയത് മാർക്ക് ചെയ്യുക</h4>
+                    <h4 class="text-info mb-3">📅 ഇന്നത്തെ പത്രം/പ്രൊഡക്റ്റ് നൽകിയത് മാർക്ക് ചെയ്യുക</h4>
                     <div class="table-responsive">
                         <table class="table table-bordered align-middle">
                             <thead class="table-dark">
                                 <tr>
                                     <th>പേര്</th>
-                                    <th>പത്രം</th>
+                                    <th>പ്രൊഡക്റ്റ്</th>
                                     <th>ഇന്നത്തെ ഡെെവറി (✔)</th>
                                 </tr>
                             </thead>
@@ -154,15 +154,15 @@
             <!-- 4. Billing & Collection Section -->
             <div class="tab-pane fade" id="billing" role="tabpanel">
                 <div class="card p-4">
-                    <h4 class="text-warning mb-3">💰 കസ്റ്റമർ വിവരങ്ങളും വാട്സാപ്പ് ബില്ലിംഗും</h4>
+                    <h4 class="text-warning mb-3">💰 കസ്റ്റമർ ബില്ലിംഗും കുടിശ്ശിക കണക്കും</h4>
                     <div class="table-responsive">
                         <table class="table table-striped align-middle">
                             <thead class="table-dark">
                                 <tr>
                                     <th>പേര് & ഫോൺ</th>
                                     <th>വിലാസം</th>
-                                    <th>പത്രവും തീയതിയും</th>
-                                    <th>രീതി & തുക (ബാലൻസ്)</th>
+                                    <th>പ്രൊഡക്റ്റും തീയതിയും</th>
+                                    <th>തുകയും ബാലൻസും</th>
                                     <th>മാറ്റങ്ങൾ / വാട്സാപ്പ്</th>
                                 </tr>
                             </thead>
@@ -191,7 +191,7 @@
         <div class="modal-dialog">
             <div class="modal-content p-3">
                 <div class="modal-header">
-                    <h5 class="modal-title">കസ്റ്റമർ വിവരങ്ങളും ബാലൻസും എഡിറ്റ് ചെയ്യുക</h5>
+                    <h5 class="modal-title">കസ്റ്റമർ കണക്കുകൾ എഡിറ്റ് ചെയ്യുക</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -209,11 +209,11 @@
                         <textarea class="form-control" id="editAddress" rows="2"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">കുടിശ്ശിക / ബാലൻസ് തുക (₹)</label>
-                        <input type="number" class="form-control" id="editBalance" placeholder="ബാക്കി തുക ഉണ്ടെങ്കിൽ നൽകുക">
+                        <label class="form-label">കഴിഞ്ഞ മാസത്തെ കുടിശ്ശിക ബാലൻസ് (₹)</label>
+                        <input type="number" class="form-control" id="editBalance" placeholder="ബാക്കി തുക ഉണ്ടെങ്കിൽ മാത്രം നൽകുക">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">തുടങ്ങിയ തീയതി</label>
+                        <label class="form-label">ബില്ല് തുടങ്ങുന്ന തീയതി</label>
                         <input type="date" class="form-control" id="editStartDate">
                     </div>
                     <div class="mb-3">
@@ -290,6 +290,8 @@
                 let pObj = papers.find(p => p.name === c.paper);
                 let price = pObj ? pObj.price : 0;
                 let balance = c.balance || 0;
+                let totalDue = price + balance;
+                let productName = c.paper || 'പത്രം/പ്രൊഡക്റ്റ്';
                 
                 let msg = "";
                 let badgeColor = "bg-secondary";
@@ -298,30 +300,28 @@
                 if (c.payType === 'Monthly') {
                     badgeColor = "bg-primary";
                     typeText = "പ്രതിമാസം";
-                    let totalDue = price + balance;
-                    msg = `നമസ്കാരം ${c.name}, നിങ്ങളുടെ ഈ മാസത്തെ പത്ര ബിൽ തുക (ട്രാവലിംഗ് ഉൾപ്പെടെ) ₹${price} ആണ്. മുൻപത്തെ കുടിശ്ശിക ബാലൻസ് ₹${balance} ഉൾപ്പെടെ ആകെ നൽകാനുള്ള തുക ₹${totalDue} ആണ്.`;
+                    msg = `നമസ്കാരം ${c.name}, നിങ്ങളുടെ ഈ മാസത്തെ '${productName}' ബിൽ തുക (ട്രാവലിംഗ് ഉൾപ്പെടെ) ₹${price} ആണ്. മുൻപത്തെ കുടിശ്ശിക ബാലൻസ് ₹${balance} ഉൾപ്പെടെ ആകെ നൽകാനുള്ള തുക ₹${totalDue} ആണ്. കണക്ക് തീർക്കേണ്ട തീയതി: ${c.settleDate || 'മാസാവസാനം'}.`;
                 } else if (c.payType === 'Advance') {
                     badgeColor = "bg-info text-dark";
                     typeText = "അഡ്വാൻസ് സ്കീം";
-                    let advPrice = price * 3; // ഉദാഹരണത്തിന് 3 മാസത്തേക്ക്
-                    msg = `നമസ്കാരം ${c.name}, നിങ്ങളുടെ അഡ്വാൻസ് സ്കീം പ്രകാരമുള്ള പത്ര ബിൽ തുക ₹${advPrice} ആണ്.`;
+                    msg = `നമസ്കാരം ${c.name}, നിങ്ങളുടെ '${productName}' അഡ്വാൻസ് സ്കീം പ്രകാരമുള്ള ബിൽ തുക പരിശോധിക്കുക. കുടിശ്ശിക ബാലൻസ്: ₹${balance}. കണക്ക് തീർക്കേണ്ട തീയതി: ${c.settleDate || '-'}.`;
                 } else if (c.payType === 'Weekly') {
                     badgeColor = "bg-warning text-dark";
                     typeText = "ആഴ്ചതോറും";
                     let weeklyPrice = Math.round(price / 4);
-                    msg = `നമസ്കാരം ${c.name}, ഈ ആഴ്ചത്തെ പത്ര ബിൽ തുക ₹${weeklyPrice} ആണ്.`;
+                    msg = `നമസ്കാരം ${c.name}, ഈ ആഴ്ചത്തെ '${productName}' ബിൽ തുക ₹${weeklyPrice} ആണ്. കുടിശ്ശിക ബാലൻസ്: ₹${balance}.`;
                 } else {
                     badgeColor = "bg-success";
                     typeText = "ദിവസേന";
                     let dailyPrice = Math.round(price / 30);
-                    msg = `നമസ്കാരം ${c.name}, ഇന്നത്തെ പത്രത്തിന്റെ തുക ₹${dailyPrice} ആണ്.`;
+                    msg = `നമസ്കാരം ${c.name}, ഇന്നത്തെ '${productName}' തുക ₹${dailyPrice} ആണ്. കുടിശ്ശിക ബാലൻസ്: ₹${balance}.`;
                 }
 
                 billingBody.innerHTML += `<tr>
                     <td><strong>${c.name}</strong><br><small>${c.phone}</small></td>
                     <td>${c.address}</td>
-                    <td>${c.paper}<br><small class="text-muted">തുടക്കം: ${c.startDate || '-'}<br>തീർച്ച: ${c.settleDate || '-'}</small></td>
-                    <td><span class="badge ${badgeColor}">${typeText}</span><br><strong>മാസം: ₹${price}</strong><br><span class="text-danger">ബാലൻസ്: ₹${balance}</span></td>
+                    <td><strong>${c.paper}</strong><br><small class="text-muted">തുടക്കം: ${c.startDate || '-'}<br>തീർച്ച: <strong class="text-dark">${c.settleDate || '-'}</strong></small></td>
+                    <td><span class="badge ${badgeColor}">${typeText}</span><br>നടപ്പ്: <strong>₹${price}</strong><br>കുടിശ്ശിക: <span class="text-danger">₹${balance}</span><br><strong>ആകെ: ₹${totalDue}</strong></td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary mb-1 w-100" onclick="openEditModal(${index})">✏️ എഡിറ്റ്</button><br>
                         <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-sm btn-success w-100">💬 WhatsApp</a>
@@ -358,7 +358,7 @@
             let modalElement = document.getElementById('editModal');
             let modal = bootstrap.Modal.getInstance(modalElement);
             modal.hide();
-            alert('വിവരങ്ങളും ബാലൻസും വിജയകരമായി അപ്ഡേറ്റ് ചെയ്തു!');
+            alert('കണക്കുകൾ വിജയകരമായി അപ്ഡേറ്റ് ചെയ്തു!');
         }
 
         function exportData() {
