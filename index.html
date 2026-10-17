@@ -67,15 +67,19 @@
             <!-- 1. Papers & Products -->
             <div class="tab-pane fade show active" id="papers">
                 <div class="card p-4">
-                    <h4 class="text-primary mb-3">പത്രങ്ങളും ആഴ്ചപ്പതിപ്പുകളും ചേർക്കുക</h4>
+                    <h4 class="text-primary mb-3">പത്രങ്ങളും പ്രൊഡക്റ്റുകളും ചേർക്കുക</h4>
                     <form id="paperForm" class="row g-3" onsubmit="addPaper(event)">
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <label class="form-label">പേര് (പത്രം/മാഗസിൻ)</label>
                             <input type="text" class="form-control" id="paperName" placeholder="ഉദാ: മാതൃഭൂമി" required>
                         </div>
-                        <div class="col-md-5">
-                            <label class="form-label">വില (ട്രാവലിംഗ് ഉൾപ്പെടെ)</label>
-                            <input type="number" class="form-control" id="paperPrice" placeholder="തുക നൽകുക (ഉദാ: 340)" required>
+                        <div class="col-md-3">
+                            <label class="form-label">വരിസംഖ്യ (മാസം)</label>
+                            <input type="number" class="form-control" id="paperPrice" placeholder="ഉദാ: 332" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">ട്രാവലിംഗ് ചാർജ്</label>
+                            <input type="number" class="form-control" id="paperTravel" placeholder="ഉദാ: 8" required>
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary w-100">ചേർക്കുക</button>
@@ -83,7 +87,20 @@
                     </form>
                     <hr class="my-4">
                     <h5 class="text-secondary">നിലവിലുള്ള ലിസ്റ്റ്</h5>
-                    <ul id="paperList" class="list-group mt-2"></ul>
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle mt-2">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>പേര്</th>
+                                    <th>വരിസംഖ്യ</th>
+                                    <th>ട്രാവലിംഗ്</th>
+                                    <th>ആകെ</th>
+                                    <th>മാറ്റം</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paperListTable"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -187,6 +204,34 @@
         </div>
     </div>
 
+    <!-- Edit Paper Modal -->
+    <div class="modal fade" id="editPaperModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content p-3">
+                <div class="modal-header">
+                    <h5 class="modal-title">പത്രത്തിന്റെ വില എഡിറ്റ് ചെയ്യുക</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editPaperIndex">
+                    <div class="mb-3">
+                        <label class="form-label">പേര്</label>
+                        <input type="text" class="form-control" id="editPaperName">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">വരിസംഖ്യ (മാസം)</label>
+                        <input type="number" class="form-control" id="editPaperPrice">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ട്രാവലിംഗ് ചാർജ്</label>
+                        <input type="number" class="form-control" id="editPaperTravel">
+                    </div>
+                    <button type="button" class="btn btn-primary w-100" onclick="updatePaperDetails()">മാറ്റങ്ങൾ സേവ് ചെയ്യുക</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Edit Customer Modal -->
     <div class="modal fade" id="editModal" tabindex="-1">
         <div class="modal-dialog">
@@ -246,10 +291,36 @@
         function addPaper(e) {
             e.preventDefault();
             let name = document.getElementById('paperName').value;
-            let price = document.getElementById('paperPrice').value;
-            papers.push({ name, price: Number(price) });
+            let price = Number(document.getElementById('paperPrice').value) || 0;
+            let travel = Number(document.getElementById('paperTravel').value) || 0;
+            papers.push({ name, price, travel });
             document.getElementById('paperForm').reset();
             saveData();
+        }
+
+        function openEditPaperModal(index) {
+            let p = papers[index];
+            document.getElementById('editPaperIndex').value = index;
+            document.getElementById('editPaperName').value = p.name;
+            document.getElementById('editPaperPrice').value = p.price;
+            document.getElementById('editPaperTravel').value = p.travel || 0;
+            
+            let myModal = new bootstrap.Modal(document.getElementById('editPaperModal'));
+            myModal.show();
+        }
+
+        function updatePaperDetails() {
+            let index = document.getElementById('editPaperIndex').value;
+            papers[index].name = document.getElementById('editPaperName').value;
+            papers[index].price = Number(document.getElementById('editPaperPrice').value) || 0;
+            papers[index].travel = Number(document.getElementById('editPaperTravel').value) || 0;
+            
+            saveData();
+            
+            let modalElement = document.getElementById('editPaperModal');
+            let modal = bootstrap.Modal.getInstance(modalElement);
+            modal.hide();
+            alert('പത്രത്തിന്റെ വിവരങ്ങൾ വിജയകരമായി അപ്ഡേറ്റ് ചെയ്തു!');
         }
 
         function addCustomer(e) {
@@ -274,14 +345,21 @@
         }
 
         function loadAppData() {
-            let paperList = document.getElementById('paperList');
+            let paperListTable = document.getElementById('paperListTable');
             let custPaper = document.getElementById('custPaper');
-            paperList.innerHTML = '';
+            paperListTable.innerHTML = '';
             custPaper.innerHTML = '<option value="">തിരഞ്ഞെടുക്കുക</option>';
             
-            papers.forEach((p) => {
-                paperList.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center">${p.name} <span>₹${p.price}</span></li>`;
-                custPaper.innerHTML += `<option value="${p.name}">${p.name} (₹${p.price})</option>`;
+            papers.forEach((p, index) => {
+                let total = (p.price || 0) + (p.travel || 0);
+                paperListTable.innerHTML += `<tr>
+                    <td><strong>${p.name}</strong></td>
+                    <td>₹${p.price}</td>
+                    <td>₹${p.travel || 0}</td>
+                    <td><strong>₹${total}</strong></td>
+                    <td><button class="btn btn-sm btn-outline-primary" onclick="openEditPaperModal(${index})">✏️ എഡിറ്റ്</button></td>
+                </tr>`;
+                custPaper.innerHTML += `<option value="${p.name}">${p.name} (വരിസംഖ്യ: ₹${p.price} + ട്രാവലിംഗ്: ₹${p.travel || 0})</option>`;
             });
 
             let dailyBody = document.getElementById('dailyTableBody');
@@ -305,15 +383,17 @@
             customers.forEach((c, index) => {
                 let pObj = papers.find(p => p.name === c.paper);
                 let price = pObj ? pObj.price : 0;
+                let travel = pObj ? (pObj.travel || 0) : 0;
+                let itemTotal = price + travel;
+                
                 let balance = Number(c.balance) || 0;
                 let paidAmount = Number(c.paidAmount) || 0;
                 
-                // ആകെ തുകയിൽ നിന്ന് തന്ന പുക കുറച്ച് ബാക്കി കാണിക്കുന്നു
-                let totalDue = (price + balance) - paidAmount;
+                let totalDue = (itemTotal + balance) - paidAmount;
                 if(totalDue < 0) totalDue = 0;
 
                 let productName = c.paper || 'പത്രം/പ്രൊഡക്റ്റ്';
-                let msg = `നമസ്കാരം ${c.name}, നിങ്ങളുടെ '${productName}' ബിൽ തുക ₹${price} ആണ്. മുൻപത്തെ ബാലൻസ് ₹${balance}, തന്ന തുക ₹${paidAmount} പോക കിഴിച്ച് ആകെ നൽകാനുള്ള തുക ₹${totalDue} ആണ്. തീർച്ച തീയതി: ${c.settleDate || 'മാസാവസാനം'}.`;
+                let msg = `നമസ്കാരം ${c.name}, നിങ്ങളുടെ '${productName}' വരിസംഖ്യ ₹${price} + ട്രാവലിംഗ് ചാർജ് ₹${travel} ആകെ ₹${itemTotal} ആണ്. മുൻപത്തെ ബാലൻസ് ₹${balance}, തന്ന തുക ₹${paidAmount} പോക കിഴിച്ച് ആകെ നൽകാനുള്ള തുക ₹${totalDue} ആണ്. തീർച്ച തീയതി: ${c.settleDate || 'മാസാവസാനം'}.`;
 
                 let badgeColor = "bg-primary";
                 let typeText = c.payType === 'Monthly' ? 'പ്രതിമാസം' : (c.payType === 'Advance' ? 'അഡ്വാൻസ്' : (c.payType === 'Weekly' ? 'ആഴ്ചതോറും' : 'ദിവസേന'));
@@ -322,7 +402,7 @@
                     <td><strong>${c.name}</strong><br><small>${c.phone}</small></td>
                     <td>${c.address}</td>
                     <td><strong>${c.paper}</strong><br><small class="text-muted">തുടക്കം: ${c.startDate || '-'}<br>തീർച്ച: <strong class="text-dark">${c.settleDate || '-'}</strong></small></td>
-                    <td><span class="badge ${badgeColor}">${typeText}</span><br>പ്രൈസ്: ₹${price}<br>ബാലൻസ്: ₹${balance}<br>തന്നത്: <span class="text-success">₹${paidAmount}</span><br><strong>ബാക്കി: ₹${totalDue}</strong></td>
+                    <td><span class="badge ${badgeColor}">${typeText}</span><br>വരിസംഖ്യ: ₹${price}<br>ട്രാവലിംഗ്: ₹${travel}<br>ബാലൻസ്: ₹${balance}<br>തന്നത്: <span class="text-success">₹${paidAmount}</span><br><strong>ബാക്കി: ₹${totalDue}</strong></td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary mb-1 w-100" onclick="openEditModal(${index})">✏️ എഡിറ്റ്</button><br>
                         <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-sm btn-success w-100">💬 WhatsApp</a>
