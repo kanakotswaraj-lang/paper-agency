@@ -50,7 +50,7 @@
         <!-- Colorful App Header -->
         <div class="app-header text-center">
             <h2>📰 പേപ്പർ & മാഗസിൻ ഏജൻസി മാനേജ്മെന്റ്</h2>
-            <p class="mb-0 text-light">സ്മാർട്ട് ബില്ലിംഗും പ്രൊഡക്റ്റ് മാനേജ്മെന്റും</p>
+            <p class="mb-0 text-light">സ്മാർട്ട് ബില്ലിംഗും ഡെലിവറി മാനേജ്മെന്റും</p>
         </div>
 
         <!-- Navigation Tabs -->
@@ -71,7 +71,7 @@
                     <form id="paperForm" class="row g-3" onsubmit="addPaper(event)">
                         <div class="col-md-5">
                             <label class="form-label">പേര് (പത്രം/മാഗസിൻ)</label>
-                            <input type="text" class="form-control" id="paperName" placeholder="ഉദാ: മാതൃഭൂമി ആഴ്ചപ്പതിപ്പ്" required>
+                            <input type="text" class="form-control" id="paperName" placeholder="ഉദാ: മാതൃഭൂമി" required>
                         </div>
                         <div class="col-md-5">
                             <label class="form-label">വില (ട്രാവലിംഗ് ഉൾപ്പെടെ)</label>
@@ -135,14 +135,15 @@
             <!-- 3. Daily Marking Section -->
             <div class="tab-pane fade" id="daily" role="tabpanel">
                 <div class="card p-4">
-                    <h4 class="text-info mb-3">📅 ഇന്നത്തെ പത്രം/പ്രൊഡക്റ്റ് നൽകിയത് മാർക്ക് ചെയ്യുക</h4>
+                    <h4 class="text-info mb-3">📅 ഇന്നത്തെ ഡെലിവറി സ്റ്റാറ്റസ് മാർക്ക് ചെയ്യുക</h4>
+                    <p class="text-muted small">കസ്റ്റമർ പത്രം വേണ്ട എന്ന് വെച്ചാൽ "വേണ്ട (Stop)" എന്ന് മാറ്റുക.</p>
                     <div class="table-responsive">
                         <table class="table table-bordered align-middle">
                             <thead class="table-dark">
                                 <tr>
                                     <th>പേര്</th>
                                     <th>പ്രൊഡക്റ്റ്</th>
-                                    <th>ഇന്നത്തെ ഡെെവറി (✔)</th>
+                                    <th>ഇന്നത്തെ സ്റ്റാറ്റസ്</th>
                                 </tr>
                             </thead>
                             <tbody id="dailyTableBody"></tbody>
@@ -209,8 +210,12 @@
                         <textarea class="form-control" id="editAddress" rows="2"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">കഴിഞ്ഞ മാസത്തെ കുടിശ്ശിക ബാലൻസ് (₹)</label>
-                        <input type="number" class="form-control" id="editBalance" placeholder="ബാക്കി തുക ഉണ്ടെങ്കിൽ മാത്രം നൽകുക">
+                        <label class="form-label">മുൻപത്തെ കുടിശ്ശിക ബാലൻസ് (₹)</label>
+                        <input type="number" class="form-control" id="editBalance">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">ഇതുവരെ തന്ന തുക (Paid Amount - വരവ് വെച്ചത്)</label>
+                        <input type="number" class="form-control" id="editPaidAmount" placeholder="കസ്റ്റമർ തന്ന തുക ഇവിടെ നൽകുക">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">ബില്ല് തുടങ്ങുന്ന തീയതി</label>
@@ -257,10 +262,15 @@
             let startDate = document.getElementById('startDate').value;
             let settleDate = document.getElementById('settleDate').value;
             
-            customers.push({ name, phone, address, paper, payType, startDate, settleDate, balance: 0 });
+            customers.push({ name, phone, address, paper, payType, startDate, settleDate, balance: 0, paidAmount: 0, status: 'Delivered' });
             document.getElementById('customerForm').reset();
             saveData();
             alert('കസ്റ്റമറെ വിജയകരമായി ചേർത്തു!');
+        }
+
+        function updateDailyStatus(index, status) {
+            customers[index].status = status;
+            saveData();
         }
 
         function loadAppData() {
@@ -276,11 +286,17 @@
 
             let dailyBody = document.getElementById('dailyTableBody');
             dailyBody.innerHTML = '';
-            customers.forEach((c) => {
+            customers.forEach((c, index) => {
+                let currentStatus = c.status || 'Delivered';
                 dailyBody.innerHTML += `<tr>
                     <td>${c.name}<br><small class="text-muted">${c.address}</small></td>
                     <td>${c.paper}</td>
-                    <td><input type="checkbox" class="form-check-input" style="width:25px; height:25px;" checked></td>
+                    <td>
+                        <select class="form-select form-select-sm" onchange="updateDailyStatus(${index}, this.value)">
+                            <option value="Delivered" ${currentStatus === 'Delivered' ? 'selected' : ''}>✅ ഡെലിവറി ചെയ്തു</option>
+                            <option value="Stop" ${currentStatus === 'Stop' ? 'selected' : ''}>❌ വേണ്ട (Stop)</option>
+                        </select>
+                    </td>
                 </tr>`;
             });
 
@@ -289,39 +305,24 @@
             customers.forEach((c, index) => {
                 let pObj = papers.find(p => p.name === c.paper);
                 let price = pObj ? pObj.price : 0;
-                let balance = c.balance || 0;
-                let totalDue = price + balance;
-                let productName = c.paper || 'പത്രം/പ്രൊഡക്റ്റ്';
+                let balance = Number(c.balance) || 0;
+                let paidAmount = Number(c.paidAmount) || 0;
                 
-                let msg = "";
-                let badgeColor = "bg-secondary";
-                let typeText = c.payType;
+                // ആകെ തുകയിൽ നിന്ന് തന്ന പുക കുറച്ച് ബാക്കി കാണിക്കുന്നു
+                let totalDue = (price + balance) - paidAmount;
+                if(totalDue < 0) totalDue = 0;
 
-                if (c.payType === 'Monthly') {
-                    badgeColor = "bg-primary";
-                    typeText = "പ്രതിമാസം";
-                    msg = `നമസ്കാരം ${c.name}, നിങ്ങളുടെ ഈ മാസത്തെ '${productName}' ബിൽ തുക (ട്രാവലിംഗ് ഉൾപ്പെടെ) ₹${price} ആണ്. മുൻപത്തെ കുടിശ്ശിക ബാലൻസ് ₹${balance} ഉൾപ്പെടെ ആകെ നൽകാനുള്ള തുക ₹${totalDue} ആണ്. കണക്ക് തീർക്കേണ്ട തീയതി: ${c.settleDate || 'മാസാവസാനം'}.`;
-                } else if (c.payType === 'Advance') {
-                    badgeColor = "bg-info text-dark";
-                    typeText = "അഡ്വാൻസ് സ്കീം";
-                    msg = `നമസ്കാരം ${c.name}, നിങ്ങളുടെ '${productName}' അഡ്വാൻസ് സ്കീം പ്രകാരമുള്ള ബിൽ തുക പരിശോധിക്കുക. കുടിശ്ശിക ബാലൻസ്: ₹${balance}. കണക്ക് തീർക്കേണ്ട തീയതി: ${c.settleDate || '-'}.`;
-                } else if (c.payType === 'Weekly') {
-                    badgeColor = "bg-warning text-dark";
-                    typeText = "ആഴ്ചതോറും";
-                    let weeklyPrice = Math.round(price / 4);
-                    msg = `നമസ്കാരം ${c.name}, ഈ ആഴ്ചത്തെ '${productName}' ബിൽ തുക ₹${weeklyPrice} ആണ്. കുടിശ്ശിക ബാലൻസ്: ₹${balance}.`;
-                } else {
-                    badgeColor = "bg-success";
-                    typeText = "ദിവസേന";
-                    let dailyPrice = Math.round(price / 30);
-                    msg = `നമസ്കാരം ${c.name}, ഇന്നത്തെ '${productName}' തുക ₹${dailyPrice} ആണ്. കുടിശ്ശിക ബാലൻസ്: ₹${balance}.`;
-                }
+                let productName = c.paper || 'പത്രം/പ്രൊഡക്റ്റ്';
+                let msg = `നമസ്കാരം ${c.name}, നിങ്ങളുടെ '${productName}' ബിൽ തുക ₹${price} ആണ്. മുൻപത്തെ ബാലൻസ് ₹${balance}, തന്ന തുക ₹${paidAmount} പോക കിഴിച്ച് ആകെ നൽകാനുള്ള തുക ₹${totalDue} ആണ്. തീർച്ച തീയതി: ${c.settleDate || 'മാസാവസാനം'}.`;
+
+                let badgeColor = "bg-primary";
+                let typeText = c.payType === 'Monthly' ? 'പ്രതിമാസം' : (c.payType === 'Advance' ? 'അഡ്വാൻസ്' : (c.payType === 'Weekly' ? 'ആഴ്ചതോറും' : 'ദിവസേന'));
 
                 billingBody.innerHTML += `<tr>
                     <td><strong>${c.name}</strong><br><small>${c.phone}</small></td>
                     <td>${c.address}</td>
                     <td><strong>${c.paper}</strong><br><small class="text-muted">തുടക്കം: ${c.startDate || '-'}<br>തീർച്ച: <strong class="text-dark">${c.settleDate || '-'}</strong></small></td>
-                    <td><span class="badge ${badgeColor}">${typeText}</span><br>നടപ്പ്: <strong>₹${price}</strong><br>കുടിശ്ശിക: <span class="text-danger">₹${balance}</span><br><strong>ആകെ: ₹${totalDue}</strong></td>
+                    <td><span class="badge ${badgeColor}">${typeText}</span><br>പ്രൈസ്: ₹${price}<br>ബാലൻസ്: ₹${balance}<br>തന്നത്: <span class="text-success">₹${paidAmount}</span><br><strong>ബാക്കി: ₹${totalDue}</strong></td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary mb-1 w-100" onclick="openEditModal(${index})">✏️ എഡിറ്റ്</button><br>
                         <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-sm btn-success w-100">💬 WhatsApp</a>
@@ -337,6 +338,7 @@
             document.getElementById('editPhone').value = c.phone;
             document.getElementById('editAddress').value = c.address;
             document.getElementById('editBalance').value = c.balance || 0;
+            document.getElementById('editPaidAmount').value = c.paidAmount || 0;
             document.getElementById('editStartDate').value = c.startDate || '';
             document.getElementById('editSettleDate').value = c.settleDate || '';
             
@@ -350,6 +352,7 @@
             customers[index].phone = document.getElementById('editPhone').value;
             customers[index].address = document.getElementById('editAddress').value;
             customers[index].balance = Number(document.getElementById('editBalance').value) || 0;
+            customers[index].paidAmount = Number(document.getElementById('editPaidAmount').value) || 0;
             customers[index].startDate = document.getElementById('editStartDate').value;
             customers[index].settleDate = document.getElementById('editSettleDate').value;
             
