@@ -263,6 +263,10 @@
                         <input type="number" class="form-control" id="editPaidAmount" placeholder="കസ്റ്റമർ തന്ന തുക ഇവിടെ നൽകുക">
                     </div>
                     <div class="mb-3">
+                        <label class="form-label">സ്റ്റോപ്പ് ചെയ്ത ദിവസങ്ങളുടെ എണ്ണം (Leave Days)</label>
+                        <input type="number" class="form-control" id="editStopDays" placeholder="പത്രം എടുക്കാത്ത ദിവസങ്ങൾ">
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">ബില്ല് തുടങ്ങുന്ന തീയതി</label>
                         <input type="date" class="form-control" id="editStartDate">
                     </div>
@@ -333,7 +337,7 @@
             let startDate = document.getElementById('startDate').value;
             let settleDate = document.getElementById('settleDate').value;
             
-            customers.push({ name, phone, address, paper, payType, startDate, settleDate, balance: 0, paidAmount: 0, status: 'Delivered' });
+            customers.push({ name, phone, address, paper, payType, startDate, settleDate, balance: 0, paidAmount: 0, stopDays: 0, status: 'Delivered' });
             document.getElementById('customerForm').reset();
             saveData();
             alert('കസ്റ്റമറെ വിജയകരമായി ചേർത്തു!');
@@ -341,6 +345,9 @@
 
         function updateDailyStatus(index, status) {
             customers[index].status = status;
+            if(status === 'Stop') {
+                customers[index].stopDays = (Number(customers[index].stopDays) || 0) + 1;
+            }
             saveData();
         }
 
@@ -388,12 +395,20 @@
                 
                 let balance = Number(c.balance) || 0;
                 let paidAmount = Number(c.paidAmount) || 0;
+                let stopDays = Number(c.stopDays) || 0;
                 
-                let totalDue = (itemTotal + balance) - paidAmount;
+                // ഏകദേശം ഒരു ദിവസത്തെ തുക കണക്കാക്കി സ്റ്റോപ്പ് ചെയ്ത ദിവസത്തെ തുക കുറയ്ക്കുന്നു
+                let dailyRate = itemTotal / 30;
+                let deduction = Math.round(stopDays * dailyRate);
+                
+                let adjustedTotal = itemTotal - deduction;
+                if(adjustedTotal < 0) adjustedTotal = 0;
+
+                let totalDue = (adjustedTotal + balance) - paidAmount;
                 if(totalDue < 0) totalDue = 0;
 
                 let productName = c.paper || 'പത്രം/പ്രൊഡക്റ്റ്';
-                let msg = `നമസ്കാരം ${c.name}, നിങ്ങളുടെ '${productName}' വരിസംഖ്യ ₹${price} + ട്രാവലിംഗ് ചാർജ് ₹${travel} ആകെ ₹${itemTotal} ആണ്. മുൻപത്തെ ബാലൻസ് ₹${balance}, തന്ന തുക ₹${paidAmount} പോക കിഴിച്ച് ആകെ നൽകാനുള്ള തുക ₹${totalDue} ആണ്. തീർച്ച തീയതി: ${c.settleDate || 'മാസാവസാനം'}.`;
+                let msg = `📰 *ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nബില്ല് തീയതി: *${c.startDate || '-'}* മുതൽ *${c.settleDate || '-'}* വരെ\nപ്രൊഡക്റ്റ്: '${productName}'\n\n• വരിസംഖ്യ: ₹${price}\n• ട്രാവലിംഗ് ചാർജ്: ₹${travel}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n• മുൻപത്തെ ബാലൻസ്: ₹${balance}\n• നിങ്ങൾ തന്ന തുക: ₹${paidAmount}\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\nദയവായി തുക നൽകി സഹകരിക്കുക. നന്ദി!`;
 
                 let badgeColor = "bg-primary";
                 let typeText = c.payType === 'Monthly' ? 'പ്രതിമാസം' : (c.payType === 'Advance' ? 'അഡ്വാൻസ്' : (c.payType === 'Weekly' ? 'ആഴ്ചതോറും' : 'ദിവസേന'));
@@ -402,7 +417,7 @@
                     <td><strong>${c.name}</strong><br><small>${c.phone}</small></td>
                     <td>${c.address}</td>
                     <td><strong>${c.paper}</strong><br><small class="text-muted">തുടക്കം: ${c.startDate || '-'}<br>തീർച്ച: <strong class="text-dark">${c.settleDate || '-'}</strong></small></td>
-                    <td><span class="badge ${badgeColor}">${typeText}</span><br>വരിസംഖ്യ: ₹${price}<br>ട്രാവലിംഗ്: ₹${travel}<br>ബാലൻസ്: ₹${balance}<br>തന്നത്: <span class="text-success">₹${paidAmount}</span><br><strong>ബാക്കി: ₹${totalDue}</strong></td>
+                    <td><span class="badge ${badgeColor}">${typeText}</span><br>വരി: ₹${price} + ട്രാവൽ: ₹${travel}<br>സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}<br>ബാലൻസ്: ₹${balance}<br>തന്നത്: <span class="text-success">₹${paidAmount}</span><br><strong>ബാക്കി: ₹${totalDue}</strong></td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary mb-1 w-100" onclick="openEditModal(${index})">✏️ എഡിറ്റ്</button><br>
                         <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-sm btn-success w-100">💬 WhatsApp</a>
@@ -419,6 +434,7 @@
             document.getElementById('editAddress').value = c.address;
             document.getElementById('editBalance').value = c.balance || 0;
             document.getElementById('editPaidAmount').value = c.paidAmount || 0;
+            document.getElementById('editStopDays').value = c.stopDays || 0;
             document.getElementById('editStartDate').value = c.startDate || '';
             document.getElementById('editSettleDate').value = c.settleDate || '';
             
@@ -433,6 +449,7 @@
             customers[index].address = document.getElementById('editAddress').value;
             customers[index].balance = Number(document.getElementById('editBalance').value) || 0;
             customers[index].paidAmount = Number(document.getElementById('editPaidAmount').value) || 0;
+            customers[index].stopDays = Number(document.getElementById('editStopDays').value) || 0;
             customers[index].startDate = document.getElementById('editStartDate').value;
             customers[index].settleDate = document.getElementById('editSettleDate').value;
             
