@@ -286,6 +286,15 @@
         let papers = JSON.parse(localStorage.getItem('papers')) || [];
         let customers = JSON.parse(localStorage.getItem('customers')) || [];
 
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            let parts = dateStr.split('-');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+            return dateStr;
+        }
+
         function saveData() {
             localStorage.setItem('papers', JSON.stringify(papers));
             localStorage.setItem('customers', JSON.stringify(customers));
@@ -397,7 +406,6 @@
                 let paidAmount = Number(c.paidAmount) || 0;
                 let stopDays = Number(c.stopDays) || 0;
                 
-                // ഏകദേശം ഒരു ദിവസത്തെ തുക കണക്കാക്കി സ്റ്റോപ്പ് ചെയ്ത ദിവസത്തെ തുക കുറയ്ക്കുന്നു
                 let dailyRate = itemTotal / 30;
                 let deduction = Math.round(stopDays * dailyRate);
                 
@@ -407,8 +415,11 @@
                 let totalDue = (adjustedTotal + balance) - paidAmount;
                 if(totalDue < 0) totalDue = 0;
 
+                let formattedStart = formatDate(c.startDate);
+                let formattedSettle = formatDate(c.settleDate);
+
                 let productName = c.paper || 'പത്രം/പ്രൊഡക്റ്റ്';
-                let msg = `📰 *ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nബില്ല് തീയതി: *${c.startDate || '-'}* മുതൽ *${c.settleDate || '-'}* വരെ\nപ്രൊഡക്റ്റ്: '${productName}'\n\n• വരിസംഖ്യ: ₹${price}\n• ട്രാവലിംഗ് ചാർജ്: ₹${travel}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n• മുൻപത്തെ ബാലൻസ്: ₹${balance}\n• നിങ്ങൾ തന്ന തുക: ₹${paidAmount}\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\nദയവായി തുക നൽകി സഹകരിക്കുക. നന്ദി!`;
+                let msg = `📰 *ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nബില്ല് തീയതി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\nപ്രൊഡക്റ്റ്: '${productName}'\n\n• വരിസംഖ്യ: ₹${price}\n• ട്രാവലിംഗ് ചാർജ്: ₹${travel}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n• മുൻപത്തെ ബാലൻസ്: ₹${balance}\n• നിങ്ങൾ തന്ന തുക: ₹${paidAmount}\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\nദയവായി തുക നൽകി സഹകരിക്കുക. നന്ദി!`;
 
                 let badgeColor = "bg-primary";
                 let typeText = c.payType === 'Monthly' ? 'പ്രതിമാസം' : (c.payType === 'Advance' ? 'അഡ്വാൻസ്' : (c.payType === 'Weekly' ? 'ആഴ്ചതോറും' : 'ദിവസേന'));
@@ -416,7 +427,7 @@
                 billingBody.innerHTML += `<tr>
                     <td><strong>${c.name}</strong><br><small>${c.phone}</small></td>
                     <td>${c.address}</td>
-                    <td><strong>${c.paper}</strong><br><small class="text-muted">തുടക്കം: ${c.startDate || '-'}<br>തീർച്ച: <strong class="text-dark">${c.settleDate || '-'}</strong></small></td>
+                    <td><strong>${c.paper}</strong><br><small class="text-muted">തുടക്കം: ${formattedStart}<br>തീർച്ച: <strong class="text-dark">${formattedSettle}</strong></small></td>
                     <td><span class="badge ${badgeColor}">${typeText}</span><br>വരി: ₹${price} + ട്രാവൽ: ₹${travel}<br>സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}<br>ബാലൻസ്: ₹${balance}<br>തന്നത്: <span class="text-success">₹${paidAmount}</span><br><strong>ബാക്കി: ₹${totalDue}</strong></td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary mb-1 w-100" onclick="openEditModal(${index})">✏️ എഡിറ്റ്</button><br>
