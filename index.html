@@ -11,7 +11,7 @@
     <style>
         body {
             font-family: 'Noto Sans Malayalam', sans-serif;
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             color: #212529;
             padding-bottom: 110px; /* Space for bottom nav */
@@ -21,9 +21,10 @@
         }
         .card {
             border: none;
-            border-radius: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             margin-bottom: 15px;
         }
         /* Bottom Navigation Bar */
@@ -33,7 +34,7 @@
             left: 0;
             width: 100%;
             background: #ffffff;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
             display: flex;
             justify-content: space-around;
             padding: 12px 0;
@@ -50,7 +51,7 @@
             border: none;
         }
         .bottom-nav-item.active {
-            color: #0d6efd;
+            color: #6610f2;
             font-weight: 700;
         }
         .bottom-nav-icon {
@@ -60,11 +61,12 @@
         }
         /* Dashboard Header Card */
         .dash-header-card {
-            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 14px;
-            padding: 20px;
+            border-radius: 16px;
+            padding: 22px;
             margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(118, 75, 162, 0.3);
         }
     </style>
 </head>
@@ -76,66 +78,63 @@
 
             <!-- 1. DASHBOARD TAB -->
             <div class="tab-pane fade show active" id="tab-dashboard">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div>
-                        <h4 class="mb-0 fw-bold">ഡാഷ്‌ബോർഡ്</h4>
-                        <small class="text-muted">ഇന്നത്തെ പ്രവർത്തന ചുരുക്കം</small>
-                    </div>
+                <div class="text-center mb-3">
+                    <h4 class="mb-0 fw-bold text-primary">✨ ഡാഷ്‌ബോർഡ് ✨</h4>
+                    <small class="text-muted">ഇന്നത്തെ പ്രവർത്തന ചുരുക്കം</small>
                 </div>
 
                 <!-- Top Status Card -->
-                <div class="dash-header-card shadow-sm">
-                    <h2 class="display-5 fw-bold mb-1" id="dashDeliveredCount">0</h2>
+                <div class="dash-header-card text-center shadow-sm">
+                    <h2 class="display-4 fw-bold mb-1" id="dashDeliveredCount">0</h2>
                     <p class="mb-0 text-light" id="dashDeliveredText">എല്ലാം പൂർത്തിയായി</p>
                 </div>
 
                 <!-- Grid Cards -->
                 <div class="row g-3 mb-3">
                     <div class="col-6">
-                        <div class="card p-3 h-100">
-                            <div class="text-primary mb-2 fs-4">👥</div>
+                        <div class="card p-3 h-100 border-start border-primary border-4">
+                            <div class="text-primary mb-1 fs-4">👥</div>
                             <h3 class="fw-bold mb-1" id="dashTotalCust">0</h3>
                             <small class="text-muted">സജീവ ഉപയോക്താക്കൾ</small>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card p-3 h-100">
-                            <div class="text-success mb-2 fs-4">📰</div>
+                        <div class="card p-3 h-100 border-start border-success border-4">
+                            <div class="text-success mb-1 fs-4">📰</div>
                             <h3 class="fw-bold mb-1" id="dashTotalPapers">0</h3>
                             <small class="text-muted">സജീവ സബ്സ്‌ക്രിപ്ഷനുകൾ</small>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card p-3 h-100">
-                            <div class="text-warning mb-2 fs-4">📈</div>
+                        <div class="card p-3 h-100 border-start border-warning border-4">
+                            <div class="text-warning mb-1 fs-4">📈</div>
                             <h3 class="fw-bold mb-1" id="dashActiveDeliveries">0</h3>
                             <small class="text-muted">ഇന്ന് ഡെലിവർ</small>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card p-3 h-100">
-                            <div class="text-purple mb-2 fs-4" style="color: #6f42c1;">💰</div>
+                        <div class="card p-3 h-100 border-start border-danger border-4">
+                            <div class="text-danger mb-1 fs-4">💰</div>
                             <h3 class="fw-bold mb-1 text-danger" id="dashTotalDue">₹0</h3>
                             <small class="text-muted">ആകെ കുടിശ്ശിക</small>
                         </div>
                     </div>
                 </div>
 
-                <!-- Backup & Recovery Card on Dashboard -->
-                <div class="card p-4 text-center bg-white border">
-                    <h5 class="text-secondary mb-2">📥 ഡാറ്റ ബാക്ക്അപ്പ് / റിക്കവറി</h5>
-                    <p class="text-muted small mb-3">നിങ്ങളുടെ ആപ്പ് ഡാറ്റ സുരക്ഷിതമായി ഡൗൺലോഡ് ചെയ്യുകയോ തിരിച്ചെടുക്കുകയോ ചെയ്യാം.</p>
+                <!-- Compact Backup & Recovery Card on Dashboard -->
+                <div class="card p-3 text-center bg-white shadow-sm">
+                    <h6 class="text-secondary mb-2">📥 ഡാറ്റ ബാക്ക്അപ്പ് / റിക്കവറി</h6>
                     <div class="d-flex justify-content-center gap-2">
-                        <button class="btn btn-outline-primary btn-sm px-3" onclick="exportData()">📥 ബാക്ക്അപ്പ് ഡൗൺലോഡ്</button>
+                        <button class="btn btn-outline-primary btn-sm px-3" onclick="exportData()">📥 ബാക്ക്അപ്പ്</button>
                         <input type="file" id="importFile" class="d-none" onchange="importData(event)">
-                        <button class="btn btn-outline-success btn-sm px-3" onclick="document.getElementById('importFile').click()">📤 ഡാറ്റ റിക്കവർ</button>
+                        <button class="btn btn-outline-success btn-sm px-3" onclick="document.getElementById('importFile').click()">📤 റിക്കവർ</button>
                     </div>
                 </div>
             </div>
 
             <!-- 2. CUSTOMERS / USERS TAB -->
             <div class="tab-pane fade" id="tab-customers">
-                <h4 class="text-success mb-3">ഉപയോക്താക്കൾ & മാനേജ്മെന്റ്</h4>
+                <h4 class="text-success mb-3 text-center">ഉപയോക്താക്കൾ & മാനേജ്മെന്റ്</h4>
                 
                 <!-- Add Customer Card -->
                 <div class="card p-3 mb-4">
@@ -218,7 +217,7 @@
 
             <!-- 3. DELIVERY TAB -->
             <div class="tab-pane fade" id="tab-delivery">
-                <h4 class="text-info mb-3">📅 ഡെലിവറി മാനേജ്മെന്റ്</h4>
+                <h4 class="text-info mb-3 text-center">📅 ഡെലിവറി മാനേജ്മെന്റ്</h4>
                 <div class="card p-3">
                     <p class="text-muted small">ഇന്നത്തെ സ്റ്റാറ്റസ് മാർക്ക് ചെയ്യുക (Stop എങ്കിൽ ലീവ് ദിവസമായി കണക്കാക്കും).</p>
                     <div class="table-responsive">
@@ -238,7 +237,7 @@
 
             <!-- 4. PAYMENTS & DUES TAB -->
             <div class="tab-pane fade" id="tab-payments">
-                <h4 class="text-warning mb-3">💰 ബില്ലിംഗും കുടിശ്ശികയും</h4>
+                <h4 class="text-warning mb-3 text-center">💰 ബില്ലിംഗും കുടിശ്ശികയും</h4>
                 
                 <div class="card p-3 mb-4">
                     <h5 class="text-danger mb-3">🚨 കുടിശ്ശികക്കാരുടെ ലിസ്റ്റ്</h5>
