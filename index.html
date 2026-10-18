@@ -59,6 +59,7 @@
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#customers" type="button">കസ്റ്റമർ രജിസ്ട്രേഷൻ</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#daily" type="button">ദിവസേന മാർക്ക്</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#billing" type="button">ബില്ലിംഗ് & വാട്സാപ്പ്</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#dues" type="button">കുടിശ്ശിക ലിസ്റ്റ്</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#backup" type="button">ബാക്ക്അപ്പ്</button></li>
         </ul>
 
@@ -190,7 +191,29 @@
                 </div>
             </div>
 
-            <!-- 5. Backup -->
+            <!-- 5. Dues Summary Section -->
+            <div class="tab-pane fade" id="dues" role="tabpanel">
+                <div class="card p-4">
+                    <h4 class="text-danger mb-3">🚨 പണം തരാൻ ബാക്കിയുള്ളവരുടെ ലിസ്റ്റ് (Dues Summary)</h4>
+                    <p class="text-muted small">തുക പൂർണ്ണമായി തരാത്ത കസ്റ്റമർമാർ ഇവിടെ മാത്രം ദൃശ്യമാകും.</p>
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>പേര് & ഫോൺ</th>
+                                    <th>വിലാസം</th>
+                                    <th>പ്രൊഡക്റ്റ്</th>
+                                    <th>നൽകാനുള്ള ബാക്കി തുക</th>
+                                    <th>വാട്സാപ്പ് ഓർമ്മപ്പെടുത്തൽ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="duesTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Backup -->
             <div class="tab-pane fade" id="backup">
                 <div class="card p-4 text-center">
                     <h4 class="text-secondary mb-3">ഡാറ്റ ബാക്ക്അപ്പും റിക്കവറിയും</h4>
@@ -396,7 +419,10 @@
             });
 
             let billingBody = document.getElementById('billingTableBody');
+            let duesBody = document.getElementById('duesTableBody');
             billingBody.innerHTML = '';
+            duesBody.innerHTML = '';
+
             customers.forEach((c, index) => {
                 let pObj = papers.find(p => p.name === c.paper);
                 let price = pObj ? pObj.price : 0;
@@ -435,7 +461,25 @@
                         <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-sm btn-success w-100">💬 WhatsApp</a>
                     </td>
                 </tr>`;
+
+                // കുടിശ്ശിക ഉള്ളവരെ മാത്രം Dues ലിസ്റ്റിൽ കാണിക്കുന്നു
+                if (totalDue > 0) {
+                    duesBody.innerHTML += `<tr>
+                        <td><strong>${c.name}</strong><br><small>${c.phone}</small></td>
+                        <td>${c.address}</td>
+                        <td><strong>${c.paper}</strong></td>
+                        <td><strong class="text-danger fs-5">₹${totalDue}</strong></td>
+                        <td>
+                            <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-sm btn-success">💬 ഓർമ്മപ്പെടുത്തൽ അയക്കുക</a>
+                        </td>
+                    </tr>`;
+                }
             });
+
+            // കുടിശ്ശികക്കാർ ആരും ഇല്ലെങ്കിൽ
+            if (duesBody.innerHTML === '') {
+                duesBody.innerHTML = `<tr><td colspan="5" class="text-center text-success py-3">🎉 എല്ലാവരും തുക നൽകിയിട്ടുണ്ട്! കുടിശ്ശികക്കാർ ആരുമില്ല.</td></tr>`;
+            }
         }
 
         function openEditModal(index) {
