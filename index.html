@@ -11,20 +11,21 @@
     <style>
         body {
             font-family: 'Noto Sans Malayalam', sans-serif;
-            background: #f8f9fa;
+            background: #f4f7fc;
             min-height: 100vh;
             color: #212529;
-            padding-bottom: 70px; /* Space for bottom nav */
+            padding-bottom: 80px;
         }
         h2, h4, h5, label, th, td, .btn {
             font-weight: 600 !important;
         }
         .card {
             border: none;
-            border-radius: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
             background: #ffffff;
             margin-bottom: 15px;
+            transition: transform 0.2s;
         }
         /* Bottom Navigation Bar */
         .bottom-nav {
@@ -33,38 +34,45 @@
             left: 0;
             width: 100%;
             background: #ffffff;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
+            padding: 12px 0;
             z-index: 1000;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
         }
         .bottom-nav-item {
             text-align: center;
-            color: #6c757d;
+            color: #8c98a4;
             text-decoration: none;
             font-size: 13px;
             flex-grow: 1;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.3s;
         }
         .bottom-nav-item.active {
-            color: #0d6efd;
+            color: #4e54c8;
             font-weight: 700;
         }
         .bottom-nav-icon {
-            font-size: 20px;
+            font-size: 22px;
             display: block;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
         }
-        /* Dashboard Header Card */
-        .dash-header-card {
-            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+        /* Colorful Gradients */
+        .gradient-header {
+            background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
             color: white;
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 15px;
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(78, 84, 200, 0.3);
         }
+        .card-cust { border-left: 5px solid #0dcaf0; }
+        .card-sub { border-left: 5px solid #198754; }
+        .card-deliv { border-left: 5px solid #ffc107; }
+        .card-due { border-left: 5px solid #dc3545; }
     </style>
 </head>
 <body class="p-3">
@@ -77,43 +85,43 @@
             <div class="tab-pane fade show active" id="tab-dashboard">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
-                        <h4 class="mb-0 fw-bold">ഡാഷ്‌ബോർഡ്</h4>
-                        <small class="text-muted">ഇന്നത്തെ ചുരുക്കം</small>
+                        <h4 class="mb-0 fw-bold text-dark">📊 ഡാഷ്‌ബോർഡ്</h4>
+                        <small class="text-muted">ഇന്നത്തെ പ്രവർത്തന ചുരുക്കം</small>
                     </div>
                 </div>
 
                 <!-- Top Status Card -->
-                <div class="dash-header-card shadow-sm">
-                    <h2 class="display-5 fw-bold mb-1" id="dashDeliveredCount">0</h2>
-                    <p class="mb-0 text-light" id="dashDeliveredText">എല്ലാം പൂർത്തിയായി</p>
+                <div class="gradient-header text-center">
+                    <h2 class="display-4 fw-bold mb-1" id="dashDeliveredCount">0</h2>
+                    <p class="mb-0 text-light fs-5" id="dashDeliveredText">എല്ലാം പൂർത്തിയായി</p>
                 </div>
 
                 <!-- Grid Cards -->
                 <div class="row g-3">
                     <div class="col-6">
-                        <div class="card p-3 h-100">
-                            <div class="text-primary mb-2 fs-4">👥</div>
-                            <h3 class="fw-bold mb-1" id="dashTotalCust">0</h3>
+                        <div class="card p-3 h-100 card-cust">
+                            <div class="text-info mb-2 fs-3">👥</div>
+                            <h3 class="fw-bold mb-1 text-dark" id="dashTotalCust">0</h3>
                             <small class="text-muted">സജീവ ഉപയോക്താക്കൾ</small>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card p-3 h-100">
-                            <div class="text-success mb-2 fs-4">📰</div>
-                            <h3 class="fw-bold mb-1" id="dashTotalPapers">0</h3>
+                        <div class="card p-3 h-100 card-sub">
+                            <div class="text-success mb-2 fs-3">📰</div>
+                            <h3 class="fw-bold mb-1 text-dark" id="dashTotalPapers">0</h3>
                             <small class="text-muted">സജീവ സബ്സ്‌ക്രിപ്ഷനുകൾ</small>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card p-3 h-100">
-                            <div class="text-warning mb-2 fs-4">📈</div>
-                            <h3 class="fw-bold mb-1" id="dashActiveDeliveries">0</h3>
+                        <div class="card p-3 h-100 card-deliv">
+                            <div class="text-warning mb-2 fs-3">🚚</div>
+                            <h3 class="fw-bold mb-1 text-dark" id="dashActiveDeliveries">0</h3>
                             <small class="text-muted">ഇന്ന് ഡെലിവർ</small>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card p-3 h-100">
-                            <div class="text-purple mb-2 fs-4" style="color: #6f42c1;">💰</div>
+                        <div class="card p-3 h-100 card-due">
+                            <div class="text-danger mb-2 fs-3">💰</div>
                             <h3 class="fw-bold mb-1 text-danger" id="dashTotalDue">₹0</h3>
                             <small class="text-muted">ആകെ കുടിശ്ശിക</small>
                         </div>
@@ -123,489 +131,15 @@
 
             <!-- 2. CUSTOMERS / USERS TAB -->
             <div class="tab-pane fade" id="tab-customers">
-                <h4 class="text-success mb-3">ഉപയോക്താക്കൾ & മാനേജ്മെന്റ്</h4>
+                <h4 class="text-success mb-3">👥 ഉപയോക്താക്കൾ & മാനേജ്മെന്റ്</h4>
                 
                 <!-- Add Customer Card -->
-                <div class="card p-3 mb-4">
-                    <h5 class="text-success mb-3">പുതിയ കസ്റ്റമറെ ചേർക്കുക</h5>
+                <div class="card p-4 mb-4">
+                    <h5 class="text-success mb-3">✨ പുതിയ കസ്റ്റമറെ ചേർക്കുക</h5>
                     <form id="customerForm" class="row g-3" onsubmit="addCustomer(event)">
                         <div class="col-md-6">
                             <label class="form-label">കസ്റ്റമറുടെ പേര്</label>
                             <input type="text" class="form-control" id="custName" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">ഫോൺ നമ്പർ (WhatsApp)</label>
-                            <input type="text" class="form-control" id="custPhone" placeholder="919846xxxxxx" required>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">വിലാസം / വീട്ടുപേര്</label>
-                            <textarea class="form-control" id="custAddress" rows="2" required></textarea>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">എടുക്കുന്ന പത്രം/പ്രൊഡക്റ്റ്</label>
-                            <select class="form-select" id="custPaper" required><option value="">തിരഞ്ഞെടുക്കുക</option></select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">പേയ്‌മെന്റ് രീതി</label>
-                            <select class="form-select" id="payType" required>
-                                <option value="Monthly">പ്രതിമാസം (Monthly)</option>
-                                <option value="Advance">അഡ്വാൻസ് സ്കീം</option>
-                                <option value="Weekly">ആഴ്ചതോറും</option>
-                                <option value="Daily">ദിവസേന</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">തുടങ്ങുന്ന തീയതി</label>
-                            <input type="date" class="form-control" id="startDate" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">കണക്ക് തീർക്കുന്ന തീയതി</label>
-                            <input type="date" class="form-control" id="settleDate" required>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-success w-100">രജിസ്റ്റർ ചെയ്യുക</button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Paper / Product Management Card -->
-                <div class="card p-3 mb-4">
-                    <h5 class="text-primary mb-3">പത്രങ്ങളും പ്രൊഡക്റ്റുകളും ചേർക്കുക</h5>
-                    <form id="paperForm" class="row g-3" onsubmit="addPaper(event)">
-                        <div class="col-md-4">
-                            <label class="form-label">പേര്</label>
-                            <input type="text" class="form-control" id="paperName" placeholder="ഉദാ: മാതൃഭൂമി" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">വരിസംഖ്യ</label>
-                            <input type="number" class="form-control" id="paperPrice" placeholder="ഉദാ: 332" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">ട്രാവലിംഗ്</label>
-                            <input type="number" class="form-control" id="paperTravel" placeholder="ഉദാ: 8" required>
-                        </div>
-                        <div class="col-md-2 d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary w-100">ചേർക്കുക</button>
-                        </div>
-                    </form>
-                    <div class="table-responsive mt-3">
-                        <table class="table table-striped align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>പേര്</th>
-                                    <th>വരിസംഖ്യ</th>
-                                    <th>ട്രാവൽ</th>
-                                    <th>മാറ്റം</th>
-                                </tr>
-                            </thead>
-                            <tbody id="paperListTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. DELIVERY TAB -->
-            <div class="tab-pane fade" id="tab-delivery">
-                <h4 class="text-info mb-3">📅 ഡെലിവറി മാനേജ്മെന്റ്</h4>
-                <div class="card p-3">
-                    <p class="text-muted small">ഇന്നത്തെ സ്റ്റാറ്റസ് മാർക്ക് ചെയ്യുക (Stop എങ്കിൽ ലീവ് ദിവസമായി കണക്കാക്കും).</p>
-                    <div class="table-responsive">
-                        <table class="table table-bordered align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>പേര്</th>
-                                    <th>പ്രൊഡക്റ്റ്</th>
-                                    <th>സ്റ്റാറ്റസ്</th>
-                                </tr>
-                            </thead>
-                            <tbody id="dailyTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4. PAYMENTS & DUES TAB -->
-            <div class="tab-pane fade" id="tab-payments">
-                <h4 class="text-warning mb-3">💰 ബില്ലിംഗും കുടിശ്ശികയും</h4>
-                
-                <div class="card p-3 mb-4">
-                    <h5 class="text-danger mb-3">🚨 കുടിശ്ശികക്കാരുടെ ലിസ്റ്റ്</h5>
-                    <div class="table-responsive">
-                        <table class="table table-striped align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>പേര് & ഫോൺ</th>
-                                    <th>ബാക്കി തുക</th>
-                                    <th>വാട്സാപ്പ്</th>
-                                </tr>
-                            </thead>
-                            <tbody id="duesTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card p-3">
-                    <h5 class="text-primary mb-3">മൊത്തം കസ്റ്റമർ ബില്ലുകൾ</h5>
-                    <div class="table-responsive">
-                        <table class="table table-striped align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>പേര്</th>
-                                    <th>വിവരങ്ങൾ</th>
-                                    <th>മാറ്റം / വാട്സാപ്പ്</th>
-                                </tr>
-                            </thead>
-                            <tbody id="billingTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Backup Section inside Payments tab for convenience -->
-                <div class="card p-3 text-center mt-3">
-                    <h6 class="text-secondary mb-2">ഡാറ്റ ബാക്ക്അപ്പ് / റിക്കവറി</h6>
-                    <div class="d-flex justify-content-center gap-2">
-                        <button class="btn btn-sm btn-outline-primary" onclick="exportData()">📥 ബാക്ക്അപ്പ് ഡൗൺലോഡ്</button>
-                        <input type="file" id="importFile" class="d-none" onchange="importData(event)">
-                        <button class="btn btn-sm btn-outline-success" onclick="document.getElementById('importFile').click()">📤 റിക്കവർ</button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- BOTTOM NAVIGATION BAR -->
-    <div class="bottom-nav">
-        <a class="bottom-nav-item active" onclick="switchTab('tab-dashboard', this)">
-            <span class="bottom-nav-icon">📊</span>
-            ഡാഷ്‌ബോർഡ്
-        </a>
-        <a class="bottom-nav-item" onclick="switchTab('tab-customers', this)">
-            <span class="bottom-nav-icon">👥</span>
-            ഉപയോക്താക്കൾ
-        </a>
-        <a class="bottom-nav-item" onclick="switchTab('tab-delivery', this)">
-            <span class="bottom-nav-icon">🚚</span>
-            ഡെലിവറി
-        </a>
-        <a class="bottom-nav-item" onclick="switchTab('tab-payments', this)">
-            <span class="bottom-nav-icon">💳</span>
-            പേയ്‌മെന്റ്
-        </a>
-    </div>
-
-    <!-- Edit Customer Modal -->
-    <div class="modal fade" id="editModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content p-3">
-                <div class="modal-header">
-                    <h5 class="modal-title">കസ്റ്റമർ കണക്കുകൾ എഡിറ്റ് ചെയ്യുക</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="editIndex">
-                    <div class="mb-3">
-                        <label class="form-label">പേര്</label>
-                        <input type="text" class="form-control" id="editName">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">ഫോൺ നമ്പർ</label>
-                        <input type="text" class="form-control" id="editPhone">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">വിലാസം</label>
-                        <textarea class="form-control" id="editAddress" rows="2"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">മുൻപത്തെ കുടിശ്ശിക ബാലൻസ് (₹)</label>
-                        <input type="number" class="form-control" id="editBalance">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">ഇതുവരെ തന്ന തുക (Paid Amount)</label>
-                        <input type="number" class="form-control" id="editPaidAmount">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">സ്റ്റോപ്പ് ചെയ്ത ദിവസങ്ങൾ (Leave Days)</label>
-                        <input type="number" class="form-control" id="editStopDays">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">ബില്ല് തുടങ്ങുന്ന തീയതി</label>
-                        <input type="date" class="form-control" id="editStartDate">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">കണക്ക് തീർക്കുന്ന തീയതി</label>
-                        <input type="date" class="form-control" id="editSettleDate">
-                    </div>
-                    <button type="button" class="btn btn-primary w-100" onclick="updateCustomer()">മാറ്റങ്ങൾ സേവ് ചെയ്യുക</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Paper Modal -->
-    <div class="modal fade" id="editPaperModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content p-3">
-                <div class="modal-header">
-                    <h5 class="modal-title">പത്രത്തിന്റെ വില എഡിറ്റ് ചെയ്യുക</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="editPaperIndex">
-                    <div class="mb-3">
-                        <label class="form-label">പേര്</label>
-                        <input type="text" class="form-control" id="editPaperName">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">വരിസംഖ്യ</label>
-                        <input type="number" class="form-control" id="editPaperPrice">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">ട്രാവലിംഗ് ചാർജ്</label>
-                        <input type="number" class="form-control" id="editPaperTravel">
-                    </div>
-                    <button type="button" class="btn btn-primary w-100" onclick="updatePaperDetails()">മാറ്റങ്ങൾ സേവ് ചെയ്യുക</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS & App Logic -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        let papers = JSON.parse(localStorage.getItem('papers')) || [];
-        let customers = JSON.parse(localStorage.getItem('customers')) || [];
-        let gpayNumber = "9495315236";
-
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('show', 'active'));
-            document.getElementById(tabId).classList.add('show', 'active');
-            
-            document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-            window.scrollTo(0, 0);
-        }
-
-        function formatDate(dateStr) {
-            if (!dateStr) return '-';
-            let parts = dateStr.split('-');
-            if (parts.length === 3) {
-                return `${parts[2]}-${parts[1]}-${parts[0]}`;
-            }
-            return dateStr;
-        }
-
-        function saveData() {
-            localStorage.setItem('papers', JSON.stringify(papers));
-            localStorage.setItem('customers', JSON.stringify(customers));
-            loadAppData();
-        }
-
-        function addPaper(e) {
-            e.preventDefault();
-            let name = document.getElementById('paperName').value;
-            let price = Number(document.getElementById('paperPrice').value) || 0;
-            let travel = Number(document.getElementById('paperTravel').value) || 0;
-            papers.push({ name, price, travel });
-            document.getElementById('paperForm').reset();
-            saveData();
-        }
-
-        function openEditPaperModal(index) {
-            let p = papers[index];
-            document.getElementById('editPaperIndex').value = index;
-            document.getElementById('editPaperName').value = p.name;
-            document.getElementById('editPaperPrice').value = p.price;
-            document.getElementById('editPaperTravel').value = p.travel || 0;
-            new bootstrap.Modal(document.getElementById('editPaperModal')).show();
-        }
-
-        function updatePaperDetails() {
-            let index = document.getElementById('editPaperIndex').value;
-            papers[index].name = document.getElementById('editPaperName').value;
-            papers[index].price = Number(document.getElementById('editPaperPrice').value) || 0;
-            papers[index].travel = Number(document.getElementById('editPaperTravel').value) || 0;
-            saveData();
-            bootstrap.Modal.getInstance(document.getElementById('editPaperModal')).hide();
-            alert('അപ്ഡേറ്റ് ചെയ്തു!');
-        }
-
-        function addCustomer(e) {
-            e.preventDefault();
-            let name = document.getElementById('custName').value;
-            let phone = document.getElementById('custPhone').value;
-            let address = document.getElementById('custAddress').value;
-            let paper = document.getElementById('custPaper').value;
-            let payType = document.getElementById('payType').value;
-            let startDate = document.getElementById('startDate').value;
-            let settleDate = document.getElementById('settleDate').value;
-            
-            customers.push({ name, phone, address, paper, payType, startDate, settleDate, balance: 0, paidAmount: 0, stopDays: 0, status: 'Delivered' });
-            document.getElementById('customerForm').reset();
-            saveData();
-            alert('കസ്റ്റമറെ വിജയകരമായി ചേർത്തു!');
-        }
-
-        function updateDailyStatus(index, status) {
-            customers[index].status = status;
-            if(status === 'Stop') {
-                customers[index].stopDays = (Number(customers[index].stopDays) || 0) + 1;
-            }
-            saveData();
-        }
-
-        function loadAppData() {
-            // Papers
-            let paperListTable = document.getElementById('paperListTable');
-            let custPaper = document.getElementById('custPaper');
-            paperListTable.innerHTML = '';
-            custPaper.innerHTML = '<option value="">തിരഞ്ഞെടുക്കുക</option>';
-            
-            papers.forEach((p, index) => {
-                let total = (p.price || 0) + (p.travel || 0);
-                paperListTable.innerHTML += `<tr>
-                    <td><strong>${p.name}</strong></td>
-                    <td>₹${p.price}</td>
-                    <td>₹${p.travel || 0}</td>
-                    <td><button class="btn btn-sm btn-outline-primary" onclick="openEditPaperModal(${index})">✏️</button></td>
-                </tr>`;
-                custPaper.innerHTML += `<option value="${p.name}">${p.name} (₹${total})</option>`;
-            });
-
-            // Daily Delivery
-            let dailyBody = document.getElementById('dailyTableBody');
-            dailyBody.innerHTML = '';
-            let deliveredCount = 0;
-            customers.forEach((c, index) => {
-                let currentStatus = c.status || 'Delivered';
-                if(currentStatus === 'Delivered') deliveredCount++;
-                dailyBody.innerHTML += `<tr>
-                    <td>${c.name}<br><small class="text-muted">${c.address}</small></td>
-                    <td>${c.paper}</td>
-                    <td>
-                        <select class="form-select form-select-sm" onchange="updateDailyStatus(${index}, this.value)">
-                            <option value="Delivered" ${currentStatus === 'Delivered' ? 'selected' : ''}>✅ ഡെലിവറി</option>
-                            <option value="Stop" ${currentStatus === 'Stop' ? 'selected' : ''}>❌ സ്റ്റോപ്പ്</option>
-                        </select>
-                    </td>
-                </tr>`;
-            });
-
-            // Billing & Dues & Dashboard totals
-            let billingBody = document.getElementById('billingTableBody');
-            let duesBody = document.getElementById('duesTableBody');
-            billingBody.innerHTML = '';
-            duesBody.innerHTML = '';
-
-            let grandTotalDue = 0;
-
-            customers.forEach((c, index) => {
-                let pObj = papers.find(p => p.name === c.paper);
-                let price = pObj ? pObj.price : 0;
-                let travel = pObj ? (pObj.travel || 0) : 0;
-                let itemTotal = price + travel;
-                
-                let balance = Number(c.balance) || 0;
-                let paidAmount = Number(c.paidAmount) || 0;
-                let stopDays = Number(c.stopDays) || 0;
-                
-                let dailyRate = itemTotal / 30;
-                let deduction = Math.round(stopDays * dailyRate);
-                
-                let adjustedTotal = itemTotal - deduction;
-                if(adjustedTotal < 0) adjustedTotal = 0;
-
-                let totalDue = (adjustedTotal + balance) - paidAmount;
-                if(totalDue < 0) totalDue = 0;
-                grandTotalDue += totalDue;
-
-                let formattedStart = formatDate(c.startDate);
-                let formattedSettle = formatDate(c.settleDate);
-                let msg = `📰 *ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nബില്ല് തീയതി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\nപ്രൊഡക്റ്റ്: '${c.paper}'\n\n• വരിസംഖ്യ: ₹${price}\n• ട്രാവലിംഗ് ചാർജ്: ₹${travel}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n• മുൻപത്തെ ബാലൻസ്: ₹${balance}\n• നിങ്ങൾ തന്ന തുക: ₹${paidAmount}\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
-
-                billingBody.innerHTML += `<tr>
-                    <td><strong>${c.name}</strong><br><small>${c.phone}</small></td>
-                    <td>വരി: ₹${price}, സ്റ്റോപ്പ്: -₹${deduction}<br><strong>ബാക്കി: ₹${totalDue}</strong></td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary mb-1 w-100" onclick="openEditModal(${index})">✏️ എഡിറ്റ്</button>
-                        <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-sm btn-success w-100">💬 WhatsApp</a>
-                    </td>
-                </tr>`;
-
-                if (totalDue > 0) {
-                    duesBody.innerHTML += `<tr>
-                        <td><strong>${c.name}</strong><br><small>${c.phone}</small></td>
-                        <td><strong class="text-danger">₹${totalDue}</strong></td>
-                        <td><a href="https://wa.me/${c.phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-sm btn-success">💬 അയക്കുക</a></td>
-                    </tr>`;
-                }
-            });
-
-            if (duesBody.innerHTML === '') {
-                duesBody.innerHTML = `<tr><td colspan="3" class="text-center text-success py-2">കുടിശ്ശികക്കാർ ആരുമില്ല!</td></tr>`;
-            }
-
-            // Update Dashboard Counters
-            document.getElementById('dashDeliveredCount').innerText = deliveredCount;
-            document.getElementById('dashDeliveredText').innerText = `${deliveredCount} പേർക്ക് ഇന്ന് ഡെലിവറി ചെയ്തു`;
-            document.getElementById('dashTotalCust').innerText = customers.length;
-            document.getElementById('dashTotalPapers').innerText = customers.length;
-            document.getElementById('dashActiveDeliveries').innerText = deliveredCount;
-            document.getElementById('dashTotalDue').innerText = `₹${grandTotalDue}`;
-        }
-
-        function openEditModal(index) {
-            let c = customers[index];
-            document.getElementById('editIndex').value = index;
-            document.getElementById('editName').value = c.name;
-            document.getElementById('editPhone').value = c.phone;
-            document.getElementById('editAddress').value = c.address;
-            document.getElementById('editBalance').value = c.balance || 0;
-            document.getElementById('editPaidAmount').value = c.paidAmount || 0;
-            document.getElementById('editStopDays').value = c.stopDays || 0;
-            document.getElementById('editStartDate').value = c.startDate || '';
-            document.getElementById('editSettleDate').value = c.settleDate || '';
-            new bootstrap.Modal(document.getElementById('editModal')).show();
-        }
-
-        function updateCustomer() {
-            let index = document.getElementById('editIndex').value;
-            customers[index].name = document.getElementById('editName').value;
-            customers[index].phone = document.getElementById('editPhone').value;
-            customers[index].address = document.getElementById('editAddress').value;
-            customers[index].balance = Number(document.getElementById('editBalance').value) || 0;
-            customers[index].paidAmount = Number(document.getElementById('editPaidAmount').value) || 0;
-            customers[index].stopDays = Number(document.getElementById('editStopDays').value) || 0;
-            customers[index].startDate = document.getElementById('editStartDate').value;
-            customers[index].settleDate = document.getElementById('editSettleDate').value;
-            saveData();
-            bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
-            alert('അപ്ഡേറ്റ് ചെയ്തു!');
-        }
-
-        function exportData() {
-            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({papers, customers}));
-            let dl = document.createElement('a');
-            dl.setAttribute("href", dataStr);
-            dl.setAttribute("download", "agency_backup.json");
-            document.body.appendChild(dl);
-            dl.click();
-            dl.remove();
-        }
-
-        function importData(event) {
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                let data = JSON.parse(e.target.result);
-                papers = data.papers || [];
-                customers = data.customers || [];
-                saveData();
-                alert('റിക്കവർ ചെയ്തു!');
-            };
-            reader.readAsText(event.target.files[0]);
-        }
-
-        window.onload = loadAppData;
-    </script>
-</body>
-</html>
+                            <label class="form-label">ഫോൺ നമ്പർ (
