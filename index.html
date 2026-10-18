@@ -14,7 +14,7 @@
             background: #f8f9fa;
             min-height: 100vh;
             color: #212529;
-            padding-bottom: 90px; /* Space for bottom nav */
+            padding-bottom: 110px; /* Space for bottom nav */
         }
         h2, h4, h5, label, th, td, .btn {
             font-weight: 600 !important;
@@ -90,7 +90,7 @@
                 </div>
 
                 <!-- Grid Cards -->
-                <div class="row g-3">
+                <div class="row g-3 mb-3">
                     <div class="col-6">
                         <div class="card p-3 h-100">
                             <div class="text-primary mb-2 fs-4">👥</div>
@@ -118,6 +118,17 @@
                             <h3 class="fw-bold mb-1 text-danger" id="dashTotalDue">₹0</h3>
                             <small class="text-muted">ആകെ കുടിശ്ശിക</small>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Backup & Recovery Card on Dashboard -->
+                <div class="card p-4 text-center bg-white border">
+                    <h5 class="text-secondary mb-2">📥 ഡാറ്റ ബാക്ക്അപ്പ് / റിക്കവറി</h5>
+                    <p class="text-muted small mb-3">നിങ്ങളുടെ ആപ്പ് ഡാറ്റ സുരക്ഷിതമായി ഡൗൺലോഡ് ചെയ്യുകയോ തിരിച്ചെടുക്കുകയോ ചെയ്യാം.</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-outline-primary btn-sm px-3" onclick="exportData()">📥 ബാക്ക്അപ്പ് ഡൗൺലോഡ്</button>
+                        <input type="file" id="importFile" class="d-none" onchange="importData(event)">
+                        <button class="btn btn-outline-success btn-sm px-3" onclick="document.getElementById('importFile').click()">📤 ഡാറ്റ റിക്കവർ</button>
                     </div>
                 </div>
             </div>
@@ -245,7 +256,7 @@
                     </div>
                 </div>
 
-                <div class="card p-3">
+                <div class="card p-3 mb-4">
                     <h5 class="text-primary mb-3">മൊത്തം കസ്റ്റമർ ബില്ലുകൾ</h5>
                     <div class="table-responsive">
                         <table class="table table-striped align-middle">
@@ -258,16 +269,6 @@
                             </thead>
                             <tbody id="billingTableBody"></tbody>
                         </table>
-                    </div>
-                </div>
-
-                <!-- Backup Section inside Payments tab -->
-                <div class="card p-3 text-center mt-3">
-                    <h6 class="text-secondary mb-2">ഡാറ്റ ബാക്ക്അപ്പ് / റിക്കവറി</h6>
-                    <div class="d-flex justify-content-center gap-2">
-                        <button class="btn btn-sm btn-outline-primary" onclick="exportData()">📥 ബാക്ക്അപ്പ്</button>
-                        <input type="file" id="importFile" class="d-none" onchange="importData(event)">
-                        <button class="btn btn-sm btn-outline-success" onclick="document.getElementById('importFile').click()">📤 റിക്കവർ</button>
                     </div>
                 </div>
             </div>
