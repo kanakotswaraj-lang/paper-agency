@@ -285,6 +285,7 @@
     <script>
         let papers = JSON.parse(localStorage.getItem('papers')) || [];
         let customers = JSON.parse(localStorage.getItem('customers')) || [];
+        let gpayNumber = "9495315236"; // ഓൺലൈൻ പെയ്മെന്റ് നമ്പർ
 
         function formatDate(dateStr) {
             if (!dateStr) return '-';
@@ -419,7 +420,7 @@
                 let formattedSettle = formatDate(c.settleDate);
 
                 let productName = c.paper || 'പത്രം/പ്രൊഡക്റ്റ്';
-                let msg = `📰 *ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nബില്ല് തീയതി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\nപ്രൊഡക്റ്റ്: '${productName}'\n\n• വരിസംഖ്യ: ₹${price}\n• ട്രാവലിംഗ് ചാർജ്: ₹${travel}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n• മുൻപത്തെ ബാലൻസ്: ₹${balance}\n• നിങ്ങൾ തന്ന തുക: ₹${paidAmount}\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\nദയവായി തുക നൽകി സഹകരിക്കുക. നന്ദി!`;
+                let msg = `📰 *ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nബില്ല് തീയതി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\nപ്രൊഡക്റ്റ്: '${productName}'\n\n• വരിസംഖ്യ: ₹${price}\n• ട്രാവലിംഗ് ചാർജ്: ₹${travel}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n• മുൻപത്തെ ബാലൻസ്: ₹${balance}\n• നിങ്ങൾ തന്ന തുക: ₹${paidAmount}\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\n💳 *ഓൺലൈൻ പേയ്മെന്റ് (GPay / PhonePe):* ${gpayNumber}\n\nദയവായി തുക നൽകി സഹകരിക്കുക. നന്ദി!`;
 
                 let badgeColor = "bg-primary";
                 let typeText = c.payType === 'Monthly' ? 'പ്രതിമാസം' : (c.payType === 'Advance' ? 'അഡ്വാൻസ്' : (c.payType === 'Weekly' ? 'ആഴ്ചതോറും' : 'ദിവസേന'));
