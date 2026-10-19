@@ -68,6 +68,12 @@
             margin-bottom: 15px;
             box-shadow: 0 8px 25px rgba(118, 75, 162, 0.3);
         }
+        /* Make modal body scrollable with padding for buttons */
+        .modal-body {
+            max-height: 75vh;
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
     </style>
 </head>
 <body class="p-3">
@@ -337,7 +343,10 @@
                         <label class="form-label">കണക്ക് തീർക്കുന്ന തീയതി</label>
                         <input type="date" class="form-control" id="editSettleDate">
                     </div>
-                    <button type="button" class="btn btn-primary w-100" onclick="updateCustomer()">മാറ്റങ്ങൾ സേവ് ചെയ്യുക</button>
+                </div>
+                <div class="modal-footer d-flex gap-2">
+                    <button type="button" class="btn btn-danger flex-grow-1" onclick="deleteCustomer()">🗑️ കസ്റ്റമറെ ഡിലീറ്റ് ചെയ്യുക</button>
+                    <button type="button" class="btn btn-primary flex-grow-1" onclick="updateCustomer()">💾 സേവ് ചെയ്യുക</button>
                 </div>
             </div>
         </div>
@@ -577,7 +586,17 @@
             customers[index].settleDate = document.getElementById('editSettleDate').value;
             saveData();
             bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
-            alert('അപ്ഡേറ്റ് ചെയ്തു!');
+            alert('മാറ്റങ്ങൾ വിജയകരമായി സേവ് ചെയ്തു!');
+        }
+
+        function deleteCustomer() {
+            let index = document.getElementById('editIndex').value;
+            if(confirm('തീർച്ചയായും ഈ കസ്റ്റമറെ ഡിലീറ്റ് ചെയ്യണമെന്നുണ്ടോ?')) {
+                customers.splice(index, 1);
+                saveData();
+                bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+                alert('കസ്റ്റമറെ വിജയകരമായി ഒഴിവാക്കി!');
+            }
         }
 
         function exportData() {
