@@ -532,14 +532,24 @@
 
                 let formattedStart = formatDate(c.startDate);
                 let formattedSettle = formatDate(c.settleDate);
-                let msg = `📰 *ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nബില്ല് തീയതി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\nപ്രൊഡക്റ്റ്: '${c.paper}'\n\n• വരിസംഖ്യ: ₹${price}\n• ട്രാവലിംഗ് ചാർജ്: ₹${travel}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n• മുൻപത്തെ ബാലൻസ്: ₹${balance}\n• നിങ്ങൾ തന്ന തുക: ₹${paidAmount}\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
+                
+                // 1. Bill Summary Message
+                let billMsg = `📰 *ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nബില്ല് തീയതി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\nപ്രൊഡക്റ്റ്: '${c.paper}'\n\n• വരിസംഖ്യ: ₹${price}\n• ട്രാവലിംഗ് ചാർജ്: ₹${travel}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n• മുൻപത്തെ ബാലൻസ്: ₹${balance}\n• നിങ്ങൾ തന്ന തുക: ₹${paidAmount}\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
+
+                // 2. Partial Payment Message
+                let partialMsg = `💳 *പെയ്മെന്റ് വിവരങ്ങൾ - നന്ദി*\n\nനമസ്കാരം *${c.name}*,\nനിങ്ങളുടെ അക്കൗണ്ടിലേക്ക് ഭാഗികമായി പണം ലഭിച്ചു.\n\n• ആകെ ബില്ല് തുക: ₹${adjustedTotal + balance}\n• നിങ്ങൾ തന്ന തുക: ₹${paidAmount}\n• *ഇനി നൽകാനുള്ള ബാക്കി തുക: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
+
+                // 3. Full Payment (Paid Success) Message
+                let successMsg = `✅ *പെയ്മെന്റ് സ്വീകരിച്ചു - നന്ദി!*\n\nനമസ്കാരം *${c.name}*,\nനിങ്ങളുടെ '${c.paper}' പത്രത്തിന്റെ ബില്ല് തുക പൂർണ്ണമായി ലഭിച്ചു എന്ന് സന്തോഷത്തോടെ അറിയിക്കുന്നു. നിലവിൽ നിങ്ങളുടെ അക്കൗണ്ടിൽ കുടിശ്ശികയൊന്നുമില്ല.\n\n• അടച്ച തുക: ₹${paidAmount}\n\nതുടർന്നുള്ള സഹകരണത്തിന് നന്ദി!\n🙏`;
 
                 billingBody.innerHTML += `<tr>
                     <td><strong>${c.name}</strong><br><small>${c.phone}</small></td>
                     <td>വരി: ₹${price}, സ്റ്റോപ്പ്: -₹${deduction}<br><strong>ബാക്കി: ₹${totalDue}</strong></td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary mb-1 w-100" onclick="openEditModal(${index})">✏️ എഡിറ്റ്</button>
-                        <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-sm btn-success w-100">💬 WhatsApp</a>
+                        <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(billMsg)}" target="_blank" class="btn btn-sm btn-success mb-1 w-100">💬 ബില്ല് അയക്കുക</a>
+                        <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(partialMsg)}" target="_blank" class="btn btn-sm btn-warning mb-1 w-100 text-dark">⏳ ഭാഗിക പെയ്മെന്റ്</a>
+                        <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(successMsg)}" target="_blank" class="btn btn-sm btn-dark w-100">✅ പെയ്മെന്റ് തീർന്നു (Paid)</a>
                     </td>
                 </tr>`;
 
@@ -547,7 +557,7 @@
                     duesBody.innerHTML += `<tr>
                         <td><strong>${c.name}</strong><br><small>${c.phone}</small></td>
                         <td><strong class="text-danger">₹${totalDue}</strong></td>
-                        <td><a href="https://wa.me/${c.phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-sm btn-success">💬 അയക്കുക</a></td>
+                        <td><a href="https://wa.me/${c.phone}?text=${encodeURIComponent(billMsg)}" target="_blank" class="btn btn-sm btn-success">💬 അയക്കുക</a></td>
                     </tr>`;
                 }
             });
@@ -587,7 +597,7 @@
             customers[index].paidAmount = Number(document.getElementById('editPaidAmount').value) || 0;
             customers[index].stopDays = Number(document.getElementById('editStopDays').value) || 0;
             customers[index].startDate = document.getElementById('editStartDate').value;
-            customers[index].settleDate = document.getElementById('editSettleDate').value;
+            customers[index].settleDate = document.getElementById('editSettleDate'.value) || document.getElementById('editSettleDate').value;
             saveData();
             bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
             alert('മാറ്റങ്ങൾ വിജയകരമായി സേവ് ചെയ്തു!');
