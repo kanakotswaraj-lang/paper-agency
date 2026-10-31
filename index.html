@@ -78,6 +78,11 @@
             border: none;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
+        /* Better table cell spacing for mobile */
+        table td, table th {
+            padding: 10px 8px !important;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body class="p-3">
@@ -268,12 +273,12 @@
                 <div class="card p-3 mb-4">
                     <h5 class="text-primary mb-3">മൊത്തം കസ്റ്റമർ ബില്ലുകൾ</h5>
                     <div class="table-responsive">
-                        <table class="table table-striped align-middle">
+                        <table class="table table-striped align-middle" style="min-width: 320px;">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>പേര്</th>
-                                    <th>വിവരങ്ങൾ</th>
-                                    <th>മാറ്റം / വാട്സാപ്പ്</th>
+                                    <th style="width: 30%;">പേര്</th>
+                                    <th style="width: 35%;">വിവരങ്ങൾ</th>
+                                    <th style="width: 35%;">മാറ്റം / വാട്സാപ്പ്</th>
                                 </tr>
                             </thead>
                             <tbody id="billingTableBody"></tbody>
@@ -331,10 +336,22 @@
                         <label class="form-label">മുൻപത്തെ കുടിശ്ശിക ബാലൻസ് (₹)</label>
                         <input type="number" class="form-control" id="editBalance">
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">ഇതുവരെ തന്ന തുക (Paid Amount)</label>
-                        <input type="number" class="form-control" id="editPaidAmount">
+
+                    <!-- New Payment Addition Section -->
+                    <div class="card p-3 bg-light mb-3 border">
+                        <label class="form-label text-success fw-bold">➕ പുതിയ പണം തന്നത് ചേർക്കുക</label>
+                        <div class="row g-2">
+                            <div class="col-7">
+                                <input type="number" class="form-control form-control-sm" id="newPayAmount" placeholder="തുക (ഉദാ: 101)">
+                            </div>
+                            <div class="col-5">
+                                <button type="button" class="btn btn-success btn-sm w-100" onclick="addNewPayment()">കൂട്ടുക</button>
+                            </div>
+                        </div>
+                        <small class="text-muted d-block mt-2">ഇതുവരെയുള്ള പേയ്‌മെന്റ് വിവരങ്ങൾ:</small>
+                        <div id="paymentHistoryText" class="small fw-bold text-dark mt-1">ഇതുവരെ തുകയൊന്നും തന്നിട്ടില്ല</div>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">സ്റ്റോപ്പ് ചെയ്ത ദിവസങ്ങൾ (Leave Days)</label>
                         <input type="number" class="form-control" id="editStopDays">
@@ -454,7 +471,7 @@
             let startDate = document.getElementById('startDate').value;
             let settleDate = document.getElementById('settleDate').value;
             
-            customers.push({ name, phone, address, paper, payType, startDate, settleDate, balance: 0, paidAmount: 0, stopDays: 0, status: 'Delivered' });
+            customers.push({ name, phone, address, paper, payType, startDate, settleDate, balance: 0, paidAmount: 0, paymentsList: [], stopDays: 0, status: 'Delivered' });
             document.getElementById('customerForm').reset();
             saveData();
             alert('കസ്റ്റമറെ വിജയകരമായി ചേർത്തു!');
@@ -517,7 +534,14 @@
                 let itemTotal = price + travel;
                 
                 let balance = Number(c.balance) || 0;
-                let paidAmount = Number(c.paidAmount) || 0;
+                
+                // Calculate total paid from paymentsList if available, else fallback to paidAmount
+                if(!c.paymentsList) c.paymentsList = [];
+                let totalPaid = c.paymentsList.reduce((sum, p) => sum + p.amount, 0);
+                if(totalPaid === 0 && c.paidAmount > 0) {
+                    totalPaid = c.paidAmount;
+                }
+
                 let stopDays = Number(c.stopDays) || 0;
                 
                 let dailyRate = itemTotal / 30;
@@ -526,25 +550,33 @@
                 let adjustedTotal = itemTotal - deduction;
                 if(adjustedTotal < 0) adjustedTotal = 0;
 
-                let totalDue = (adjustedTotal + balance) - paidAmount;
+                let totalDue = (adjustedTotal + balance) - totalPaid;
                 if(totalDue < 0) totalDue = 0;
                 grandTotalDue += totalDue;
 
                 let formattedStart = formatDate(c.startDate);
                 let formattedSettle = formatDate(c.settleDate);
+
+                // Format payment breakdown text for messages
+                let payBreakdownStr = "";
+                if(c.paymentsList.length > 0) {
+                    payBreakdownStr = c.paymentsList.map(p => `• ${p.date}: ₹${p.amount}`).join('\n');
+                } else {
+                    payBreakdownStr = `• ആകെ തന്നത്: ₹${totalPaid}`;
+                }
                 
                 // 1. Bill Summary Message
-                let billMsg = `📰 *ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nബില്ല് തീയതി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\nപ്രൊഡക്റ്റ്: '${c.paper}'\n\n• വരിസംഖ്യ: ₹${price}\n• ട്രാവലിംഗ് ചാർജ്: ₹${travel}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n• മുൻപത്തെ ബാലൻസ്: ₹${balance}\n• നിങ്ങൾ തന്ന തുക: ₹${paidAmount}\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
+                let billMsg = `📰 *ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nബില്ല് തീയതി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\nപ്രൊഡക്റ്റ്: '${c.paper}'\n\n• വരിസംഖ്യ: ₹${price}\n• ട്രാവലിംഗ് ചാർജ്: ₹${travel}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n• മുൻപത്തെ ബാലൻസ്: ₹${balance}\n\n*പെയ്മെന്റ് വിവരങ്ങൾ:*\n${payBreakdownStr}\n• *ആകെ തന്നത്: ₹${totalPaid}*\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
 
                 // 2. Partial Payment Message
-                let partialMsg = `💳 *പെയ്മെന്റ് വിവരങ്ങൾ - നന്ദി*\n\nനമസ്കാരം *${c.name}*,\nനിങ്ങളുടെ അക്കൗണ്ടിലേക്ക് ഭാഗികമായി പണം ലഭിച്ചു.\n\n• ആകെ ബില്ല് തുക: ₹${adjustedTotal + balance}\n• നിങ്ങൾ തന്ന തുക: ₹${paidAmount}\n• *ഇനി നൽകാനുള്ള ബാക്കി തുക: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
+                let partialMsg = `💳 *പെയ്മെന്റ് വിവരങ്ങൾ - നന്ദി*\n\nനമസ്കാരം *${c.name}*,\nനിങ്ങളുടെ അക്കൗണ്ടിലേക്ക് പണം ലഭിച്ചു.\n\n• ആകെ ബില്ല് തുക: ₹${adjustedTotal + balance}\n\n*പെയ്മെന്റ് വിവരങ്ങൾ:*\n${payBreakdownStr}\n• *ഇതുവരെ തന്ന ആകെ തുക: ₹${totalPaid}*\n• *ഇനി നൽകാനുള്ള ബാക്കി തുക: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
 
                 // 3. Full Payment (Paid Success) Message
-                let successMsg = `✅ *പെയ്മെന്റ് സ്വീകരിച്ചു - നന്ദി!*\n\nനമസ്കാരം *${c.name}*,\nനിങ്ങളുടെ '${c.paper}' പത്രത്തിന്റെ ബില്ല് തുക പൂർണ്ണമായി ലഭിച്ചു എന്ന് സന്തോഷത്തോടെ അറിയിക്കുന്നു. നിലവിൽ നിങ്ങളുടെ അക്കൗണ്ടിൽ കുടിശ്ശികയൊന്നുമില്ല.\n\n• അടച്ച തുക: ₹${paidAmount}\n\nതുടർന്നുള്ള സഹകരണത്തിന് നന്ദി!\n🙏`;
+                let successMsg = `✅ *പെയ്മെന്റ് സ്വീകരിച്ചു - നന്ദി!*\n\nനമസ്കാരം *${c.name}*,\nനിങ്ങളുടെ '${c.paper}' പത്രത്തിന്റെ ബില്ല് തുക പൂർണ്ണമായി ലഭിച്ചു എന്ന് സന്തോഷത്തോടെ അറിയിക്കുന്നു. നിലവിൽ നിങ്ങളുടെ അക്കൗണ്ടിൽ കുടിശ്ശികയൊന്നുമില്ല.\n\n*അടച്ച തുകകളുടെ വിവരം:*\n${payBreakdownStr}\n• *ആകെ അടച്ചത്: ₹${totalPaid}*\n\nതുടർന്നുള്ള സഹകരണത്തിന് നന്ദി!\n🙏`;
 
                 billingBody.innerHTML += `<tr>
-                    <td><strong>${c.name}</strong><br><small>${c.phone}</small></td>
-                    <td>വരി: ₹${price}, സ്റ്റോപ്പ്: -₹${deduction}<br><strong>ബാക്കി: ₹${totalDue}</strong></td>
+                    <td><strong>${c.name}</strong><br><small class="text-muted">${c.phone}</small></td>
+                    <td>വരി: ₹${price}<br>തന്നത്: ₹${totalPaid}<br><strong>ബാക്കി: ₹${totalDue}</strong></td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary mb-1 w-100" onclick="openEditModal(${index})">✏️ എഡിറ്റ്</button>
                         <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(billMsg)}" target="_blank" class="btn btn-sm btn-success mb-1 w-100">💬 ബില്ല് അയക്കുക</a>
@@ -581,11 +613,52 @@
             document.getElementById('editPhone').value = c.phone;
             document.getElementById('editAddress').value = c.address;
             document.getElementById('editBalance').value = c.balance || 0;
-            document.getElementById('editPaidAmount').value = c.paidAmount || 0;
             document.getElementById('editStopDays').value = c.stopDays || 0;
             document.getElementById('editStartDate').value = c.startDate || '';
             document.getElementById('editSettleDate').value = c.settleDate || '';
+            document.getElementById('newPayAmount').value = '';
+            
+            updatePaymentHistoryDisplay(c);
             new bootstrap.Modal(document.getElementById('editModal')).show();
+        }
+
+        function updatePaymentHistoryDisplay(c) {
+            let historyDiv = document.getElementById('paymentHistoryText');
+            if(!c.paymentsList) c.paymentsList = [];
+            if(c.paymentsList.length === 0) {
+                if(c.paidAmount > 0) {
+                    historyDiv.innerHTML = `പഴയ തുക: ₹${c.paidAmount}`;
+                } else {
+                    historyDiv.innerHTML = `ഇതുവരെ തുകയൊന്നും തന്നിട്ടില്ല`;
+                }
+            } else {
+                historyDiv.innerHTML = c.paymentsList.map(p => `[${p.date}: ₹${p.amount}]`).join(', ');
+            }
+        }
+
+        function addNewPayment() {
+            let index = document.getElementById('editIndex').value;
+            let amt = Number(document.getElementById('newPayAmount').value);
+            if(!amt || amt <= 0) {
+                alert('ദയവായി സാധുവായ തുക നൽകുക!');
+                return;
+            }
+            
+            let c = customers[index];
+            if(!c.paymentsList) c.paymentsList = [];
+            
+            // Get current date in DD-MM-YYYY format
+            let d = new Date();
+            let dateStr = String(d.getDate()).padStart(2, '0') + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + d.getFullYear();
+            
+            c.paymentsList.push({ amount: amt, date: dateStr });
+            
+            // Also update legacy paidAmount for compatibility
+            c.paidAmount = c.paymentsList.reduce((sum, p) => sum + p.amount, 0);
+            
+            document.getElementById('newPayAmount').value = '';
+            updatePaymentHistoryDisplay(c);
+            alert('₹' + amt + ' വിജയകരമായി കൂട്ടിച്ചേർത്തു!');
         }
 
         function updateCustomer() {
@@ -594,10 +667,9 @@
             customers[index].phone = document.getElementById('editPhone').value;
             customers[index].address = document.getElementById('editAddress').value;
             customers[index].balance = Number(document.getElementById('editBalance').value) || 0;
-            customers[index].paidAmount = Number(document.getElementById('editPaidAmount').value) || 0;
             customers[index].stopDays = Number(document.getElementById('editStopDays').value) || 0;
             customers[index].startDate = document.getElementById('editStartDate').value;
-            customers[index].settleDate = document.getElementById('editSettleDate'.value) || document.getElementById('editSettleDate').value;
+            customers[index].settleDate = document.getElementById('editSettleDate').value;
             saveData();
             bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
             alert('മാറ്റങ്ങൾ വിജയകരമായി സേവ് ചെയ്തു!');
