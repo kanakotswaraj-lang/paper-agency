@@ -14,7 +14,7 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             color: #212529;
-            padding-bottom: 110px; /* Space for bottom nav */
+            padding-bottom: 110px;
         }
         h2, h4, h5, label, th, td, .btn {
             font-weight: 600 !important;
@@ -27,7 +27,6 @@
             backdrop-filter: blur(10px);
             margin-bottom: 15px;
         }
-        /* Bottom Navigation Bar */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -59,7 +58,6 @@
             display: block;
             margin-bottom: 2px;
         }
-        /* Dashboard Header Card */
         .dash-header-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -68,7 +66,6 @@
             margin-bottom: 15px;
             box-shadow: 0 8px 25px rgba(118, 75, 162, 0.3);
         }
-        /* Proper scrolling for modal */
         .modal-body {
             max-height: 60vh;
             overflow-y: auto;
@@ -78,7 +75,6 @@
             border: none;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        /* Better table cell spacing for mobile */
         table td, table th {
             padding: 10px 8px !important;
             font-size: 14px;
@@ -88,7 +84,6 @@
 <body class="p-3">
 
     <div class="container">
-        <!-- Tab Contents -->
         <div class="tab-content">
 
             <!-- 1. DASHBOARD TAB -->
@@ -98,13 +93,11 @@
                     <small class="text-muted">ഇന്നത്തെ പ്രവർത്തന ചുരുക്കം</small>
                 </div>
 
-                <!-- Top Status Card -->
                 <div class="dash-header-card text-center shadow-sm">
                     <h2 class="display-4 fw-bold mb-1" id="dashDeliveredCount">0</h2>
                     <p class="mb-0 text-light" id="dashDeliveredText">എല്ലാം പൂർത്തിയായി</p>
                 </div>
 
-                <!-- Grid Cards -->
                 <div class="row g-3 mb-3">
                     <div class="col-6">
                         <div class="card p-3 h-100 border-start border-primary border-4">
@@ -136,7 +129,6 @@
                     </div>
                 </div>
 
-                <!-- Compact Backup & Recovery Card on Dashboard -->
                 <div class="card p-3 text-center bg-white shadow-sm">
                     <h6 class="text-secondary mb-2">📥 ഡാറ്റ ബാക്ക്അപ്പ് / റിക്കവറി</h6>
                     <div class="d-flex justify-content-center gap-2">
@@ -151,7 +143,6 @@
             <div class="tab-pane fade" id="tab-customers">
                 <h4 class="text-success mb-3 text-center">ഉപയോക്താക്കൾ & മാനേജ്മെന്റ്</h4>
                 
-                <!-- Add Customer Card -->
                 <div class="card p-3 mb-4">
                     <h5 class="text-success mb-3">പുതിയ കസ്റ്റമറെ ചേർക്കുക</h5>
                     <form id="customerForm" class="row g-3" onsubmit="addCustomer(event)">
@@ -194,7 +185,6 @@
                     </form>
                 </div>
 
-                <!-- Paper / Product Management Card -->
                 <div class="card p-3 mb-4">
                     <h5 class="text-primary mb-3">പത്രങ്ങളും പ്രൊഡക്റ്റുകളും ചേർക്കുക</h5>
                     <form id="paperForm" class="row g-3" onsubmit="addPaper(event)">
@@ -351,7 +341,7 @@
                         <label class="form-label text-success fw-bold">➕ പുതിയ പണം തന്നത് ചേർക്കുക</label>
                         <div class="row g-2">
                             <div class="col-7">
-                                <input type="number" class="form-control form-control-sm" id="newPayAmount" placeholder="തുക (ഉദാ: 101)">
+                                <input type="number" class="form-control form-control-sm" id="newPayAmount" placeholder="തുക (ഉദാ: 890)">
                             </div>
                             <div class="col-5">
                                 <button type="button" class="btn btn-success btn-sm w-100" onclick="addNewPayment()">കൂട്ടുക</button>
@@ -387,7 +377,7 @@
         <div class="modal-dialog">
             <div class="modal-content p-3">
                 <div class="modal-header">
-                    <h5 class="modal-title">പത്രത്തിന്റെ വില എഡിറ്റ് ചെയ്യുക</h5>
+                    <h5 class="modal-title">പ്രൊഡക്റ്റ് / സ്കീം വില എഡിറ്റ് ചെയ്യുക</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -397,7 +387,7 @@
                         <input type="text" class="form-control" id="editPaperName">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">വരിസംഖ്യ</label>
+                        <label class="form-label">വരിസംഖ്യ / തുക</label>
                         <input type="number" class="form-control" id="editPaperPrice">
                     </div>
                     <div class="mb-3">
@@ -565,7 +555,8 @@
                 let formattedStart = formatDate(c.startDate);
                 let formattedSettle = formatDate(c.settleDate);
 
-                let payTypeLabel = c.payType === 'Advance' ? '🔴 അഡ്വാൻസ് സ്കീം' : '🔵 പ്രതിമാസം';
+                let isAdvance = (c.payType === 'Advance');
+                let payTypeLabel = isAdvance ? '🔴 അഡ്വാൻസ് സ്കീം' : '🔵 പ്രതിമാസം';
 
                 let payBreakdownStr = "";
                 if(c.paymentsList.length > 0) {
@@ -574,15 +565,24 @@
                     payBreakdownStr = `• ആകെ തന്നത്: ₹${totalPaid}`;
                 }
                 
-                let billMsg = `📰 *ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nബില്ല് തീയതി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\nപ്രൊഡക്റ്റ്: '${c.paper}'\n\n• വരിസംഖ്യ: ₹${price}\n• ട്രാവലിംഗ് ചാർജ്: ₹${travel}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n• മുൻപത്തെ ബാലൻസ്: ₹${balance}\n\n*പെയ്മെന്റ് വിവരങ്ങൾ:*\n${payBreakdownStr}\n• *ആകെ തന്നത്: ₹${totalPaid}*\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
+                // Messages based on Scheme Type
+                let billMsg, successMsg;
+
+                if (isAdvance) {
+                    billMsg = `📰 *അഡ്വാൻസ് സ്കീം ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nസ്കീം കാലാവധി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\nപ്രൊഡക്റ്റ്: '${c.paper}'\n\n• സ്കീം ആകെ തുക: ₹${price}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n\n*പെയ്മെന്റ് വിവരങ്ങൾ:*\n${payBreakdownStr}\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
+
+                    successMsg = `✅ *അഡ്വാൻസ് പെയ്മെന്റ് സ്വീകരിച്ചു - നന്ദി!*\n\nനമസ്കാരം *${c.name}*,\nനിങ്ങളുടെ '${c.paper}' പത്രത്തിന്റെ അഡ്വാൻസ് സ്കീം തുക പൂർണ്ണമായി ലഭിച്ചു എന്ന് സന്തോഷത്തോടെ അറിയിക്കുന്നു.\n\n• സ്കീം കാലാവധി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\n*അടച്ച തുകകളുടെ വിവരം:*\n${payBreakdownStr}\n• *ആകെ അടച്ചത്: ₹${totalPaid}*\n• നിലവിലെ കുടിശ്ശിക: ₹0\n\nതുടർന്നുള്ള സഹകരണത്തിന് നന്ദി!\n🙏`;
+                } else {
+                    billMsg = `📰 *ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nബില്ല് തീയതി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\nപ്രൊഡക്റ്റ്: '${c.paper}'\n\n• വരിസംഖ്യ: ₹${price}\n• ട്രാവലിംഗ് ചാർജ്: ₹${travel}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n• മുൻപത്തെ ബാലൻസ്: ₹${balance}\n\n*പെയ്മെന്റ് വിവരങ്ങൾ:*\n${payBreakdownStr}\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
+
+                    successMsg = `✅ *പെയ്മെന്റ് സ്വീകരിച്ചു - നന്ദി!*\n\nനമസ്കാരം *${c.name}*,\nനിങ്ങളുടെ '${c.paper}' പത്രത്തിന്റെ ബില്ല് തുക പൂർണ്ണമായി ലഭിച്ചു എന്ന് സന്തോഷത്തോടെ അറിയിക്കുന്നു. നിലവിൽ നിങ്ങളുടെ അക്കൗണ്ടിൽ കുടിശ്ശികയൊന്നുമില്ല.\n\n*അടച്ച തുകകളുടെ വിവരം:*\n${payBreakdownStr}\n• *ആകെ അടച്ചത്: ₹${totalPaid}*\n\nതുടർന്നുള്ള സഹകരണത്തിന് നന്ദി!\n🙏`;
+                }
 
                 let partialMsg = `💳 *പെയ്മെന്റ് വിവരങ്ങൾ - നന്ദി*\n\nനമസ്കാരം *${c.name}*,\nനിങ്ങളുടെ അക്കൗണ്ടിലേക്ക് പണം ലഭിച്ചു.\n\n• ആകെ ബില്ല് തുക: ₹${adjustedTotal + balance}\n\n*പെയ്മെന്റ് വിവരങ്ങൾ:*\n${payBreakdownStr}\n• *ഇതുവരെ തന്ന ആകെ തുക: ₹${totalPaid}*\n• *ഇനി നൽകാനുള്ള ബാക്കി തുക: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
 
-                let successMsg = `✅ *പെയ്മെന്റ് സ്വീകരിച്ചു - നന്ദി!*\n\nനമസ്കാരം *${c.name}*,\nനിങ്ങളുടെ '${c.paper}' പത്രത്തിന്റെ ബില്ല് തുക പൂർണ്ണമായി ലഭിച്ചു എന്ന് സന്തോഷത്തോടെ അറിയിക്കുന്നു. നിലവിൽ നിങ്ങളുടെ അക്കൗണ്ടിൽ കുടിശ്ശികയൊന്നുമില്ല.\n\n*അടച്ച തുകകളുടെ വിവരം:*\n${payBreakdownStr}\n• *ആകെ അടച്ചത്: ₹${totalPaid}*\n\nതുടർന്നുള്ള സഹകരണത്തിന് നന്ദി!\n🙏`;
-
                 billingBody.innerHTML += `<tr>
                     <td><strong>${c.name}</strong><br><small class="text-muted">${c.phone}</small><br><span class="badge bg-secondary" style="font-size: 10px;">${payTypeLabel}</span></td>
-                    <td>വരി: ₹${price}<br>തന്നത്: ₹${totalPaid}<br><strong>ബാക്കി: ₹${totalDue}</strong></td>
+                    <td>തുക: ₹${price}<br>തന്നത്: ₹${totalPaid}<br><strong>ബാക്കി: ₹${totalDue}</strong></td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary mb-1 w-100" onclick="openEditModal(${index})">✏️ എഡിറ്റ്</button>
                         <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(billMsg)}" target="_blank" class="btn btn-sm btn-success mb-1 w-100">💬 ബില്ല് അയക്കുക</a>
