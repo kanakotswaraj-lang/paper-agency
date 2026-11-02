@@ -26,6 +26,7 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             margin-bottom: 15px;
+            overflow: hidden;
         }
         .bottom-nav {
             position: fixed;
@@ -75,15 +76,22 @@
             border: none;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
+        /* Perfect mobile table fitting */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
         table td, table th {
-            padding: 10px 8px !important;
-            font-size: 14px;
+            padding: 8px 6px !important;
+            font-size: 13px;
+            vertical-align: middle;
         }
     </style>
 </head>
-<body class="p-3">
+<body class="p-2">
 
-    <div class="container">
+    <div class="container px-1">
         <div class="tab-content">
 
             <!-- 1. DASHBOARD TAB -->
@@ -244,8 +252,8 @@
             <div class="tab-pane fade" id="tab-payments">
                 <h4 class="text-warning mb-3 text-center">💰 ബില്ലിംഗും കുടിശ്ശികയും</h4>
                 
-                <div class="card p-3 mb-4">
-                    <h5 class="text-danger mb-3">🚨 കുടിശ്ശികക്കാരുടെ ലിസ്റ്റ്</h5>
+                <div class="card p-2 mb-3">
+                    <h5 class="text-danger mb-2 fs-6">🚨 കുടിശ്ശികക്കാരുടെ ലിസ്റ്റ്</h5>
                     <div class="table-responsive">
                         <table class="table table-striped align-middle">
                             <thead class="table-dark">
@@ -260,14 +268,14 @@
                     </div>
                 </div>
 
-                <div class="card p-3 mb-4">
-                    <h5 class="text-primary mb-3">മൊത്തം കസ്റ്റമർ ബില്ലുകൾ</h5>
+                <div class="card p-2 mb-3">
+                    <h5 class="text-primary mb-2 fs-6">മൊത്തം കസ്റ്റമർ ബില്ലുകൾ</h5>
                     <div class="table-responsive">
-                        <table class="table table-striped align-middle" style="min-width: 320px;">
+                        <table class="table table-striped align-middle" style="width: 100%; min-width: 290px;">
                             <thead class="table-dark">
                                 <tr>
-                                    <th style="width: 30%;">പേര്</th>
-                                    <th style="width: 35%;">വിവരങ്ങൾ</th>
+                                    <th style="width: 32%;">പേര്</th>
+                                    <th style="width: 33%;">വിവരങ്ങൾ</th>
                                     <th style="width: 35%;">മാറ്റം / വാട്സാപ്പ്</th>
                                 </tr>
                             </thead>
@@ -332,7 +340,6 @@
                         </select>
                     </div>
 
-                    <!-- Custom Total Scheme Amount Field for Advance Scheme -->
                     <div class="mb-3" id="customAmountGroup">
                         <label class="form-label text-danger">അഡ്വാൻസ് സ്കീം ആകെ തുക (ഉദാ: 890 അല്ലെങ്കിൽ 600)</label>
                         <input type="number" class="form-control" id="editCustomTotal" placeholder="സ്കീം തുക നൽകുക">
@@ -343,7 +350,6 @@
                         <input type="number" class="form-control" id="editBalance">
                     </div>
 
-                    <!-- New Payment Addition Section -->
                     <div class="card p-3 bg-light mb-3 border">
                         <label class="form-label text-success fw-bold">➕ പുതിയ പണം തന്നത് ചേർക്കുക</label>
                         <div class="row g-2">
@@ -503,7 +509,7 @@
                     <td><strong>${p.name}</strong></td>
                     <td>₹${p.price}</td>
                     <td>₹${p.travel || 0}</td>
-                    <td><button class="btn btn-sm btn-outline-primary" onclick="openEditPaperModal(${index})">✏️</button></td>
+                    <td><button class="btn btn-sm btn-outline-primary py-0 px-2" onclick="openEditPaperModal(${index})">✏️</button></td>
                 </tr>`;
                 custPaper.innerHTML += `<option value="${p.name}">${p.name} (₹${total})</option>`;
             });
@@ -518,7 +524,7 @@
                     <td>${c.name}<br><small class="text-muted">${c.address}</small></td>
                     <td>${c.paper}</td>
                     <td>
-                        <select class="form-select form-select-sm" onchange="updateDailyStatus(${index}, this.value)">
+                        <select class="form-select form-select-sm py-0 px-1" style="font-size: 12px;" onchange="updateDailyStatus(${index}, this.value)">
                             <option value="Delivered" ${currentStatus === 'Delivered' ? 'selected' : ''}>✅ ഡെലിവറി</option>
                             <option value="Stop" ${currentStatus === 'Stop' ? 'selected' : ''}>❌ സ്റ്റോപ്പ്</option>
                         </select>
@@ -538,9 +544,7 @@
                 let price = pObj ? pObj.price : 0;
                 let travel = pObj ? (pObj.travel || 0) : 0;
                 
-                // If customTotal is set (like Advance scheme ₹890 or ₹600), use it as base amount
                 let baseAmount = (c.customTotal && c.customTotal > 0) ? Number(c.customTotal) : (price + travel);
-                
                 let balance = Number(c.balance) || 0;
                 
                 if(!c.paymentsList) c.paymentsList = [];
@@ -564,7 +568,7 @@
                 let formattedSettle = formatDate(c.settleDate);
 
                 let isAdvance = (c.payType === 'Advance');
-                let payTypeLabel = isAdvance ? '🔴 അഡ്വാൻസ് സ്കീം' : '🔵 പ്രതിമാസം';
+                let payTypeLabel = isAdvance ? '🔴 അഡ്വാൻസ്' : '🔵 പ്രതിമാസം';
 
                 let payBreakdownStr = "";
                 if(c.paymentsList.length > 0) {
@@ -588,21 +592,21 @@
                 let partialMsg = `💳 *പെയ്മെന്റ് വിവരങ്ങൾ - നന്ദി*\n\nനമസ്കാരം *${c.name}*,\nനിങ്ങളുടെ അക്കൗണ്ടിലേക്ക് പണം ലഭിച്ചു.\n\n• ആകെ ബില്ല് തുക: ₹${adjustedTotal + balance}\n\n*പെയ്മെന്റ് വിവരങ്ങൾ:*\n${payBreakdownStr}\n• *ഇതുവരെ തന്ന ആകെ തുക: ₹${totalPaid}*\n• *ഇനി നൽകാനുള്ള ബാക്കി തുക: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
 
                 billingBody.innerHTML += `<tr>
-                    <td><strong>${c.name}</strong><br><small class="text-muted">${c.phone}</small><br><span class="badge bg-secondary" style="font-size: 10px;">${payTypeLabel}</span></td>
-                    <td>തുക: ₹${baseAmount}<br>തന്നത്: ₹${totalPaid}<br><strong>ബാക്കി: ₹${totalDue}</strong></td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary mb-1 w-100" onclick="openEditModal(${index})">✏️ എഡിറ്റ്</button>
-                        <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(billMsg)}" target="_blank" class="btn btn-sm btn-success mb-1 w-100">💬 ബില്ല് അയക്കുക</a>
-                        <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(partialMsg)}" target="_blank" class="btn btn-sm btn-warning mb-1 w-100 text-dark">⏳ ഭാഗിക പെയ്മെന്റ്</a>
-                        <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(successMsg)}" target="_blank" class="btn btn-sm btn-dark w-100">✅ പെയ്മെന്റ് തീർന്നു (Paid)</a>
+                    <td style="word-break: break-word;"><strong>${c.name}</strong><br><small class="text-muted" style="font-size:11px;">${c.phone}</small><br><span class="badge bg-secondary" style="font-size: 9px;">${payTypeLabel}</span></td>
+                    <td style="font-size: 12px;">തുക: ₹${baseAmount}<br>തന്നത്: ₹${totalPaid}<br><strong>ബാക്കി: ₹${totalDue}</strong></td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-primary mb-1 w-100 py-0" style="font-size:11px;" onclick="openEditModal(${index})">✏️ എഡിറ്റ്</button>
+                        <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(billMsg)}" target="_blank" class="btn btn-sm btn-success mb-1 w-100 py-0" style="font-size:11px;">💬 ബില്ല്</a>
+                        <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(partialMsg)}" target="_blank" class="btn btn-sm btn-warning mb-1 w-100 text-dark py-0" style="font-size:11px;">⏳ ഭാഗികം</a>
+                        <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(successMsg)}" target="_blank" class="btn btn-sm btn-dark w-100 py-0" style="font-size:11px;">✅ തീർന്നു</a>
                     </td>
                 </tr>`;
 
                 if (totalDue > 0) {
                     duesBody.innerHTML += `<tr>
-                        <td><strong>${c.name}</strong><br><small>${c.phone}</small><br><span class="badge bg-secondary" style="font-size: 10px;">${payTypeLabel}</span></td>
+                        <td><strong>${c.name}</strong><br><small class="text-muted" style="font-size:11px;">${c.phone}</small><br><span class="badge bg-secondary" style="font-size: 9px;">${payTypeLabel}</span></td>
                         <td><strong class="text-danger">₹${totalDue}</strong></td>
-                        <td><a href="https://wa.me/${c.phone}?text=${encodeURIComponent(billMsg)}" target="_blank" class="btn btn-sm btn-success">💬 അയക്കുക</a></td>
+                        <td><a href="https://wa.me/${c.phone}?text=${encodeURIComponent(billMsg)}" target="_blank" class="btn btn-sm btn-success py-0 px-2" style="font-size:11px;">💬 അയക്കുക</a></td>
                     </tr>`;
                 }
             });
