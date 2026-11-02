@@ -331,6 +331,13 @@
                             <option value="Daily">ദിവസേന</option>
                         </select>
                     </div>
+
+                    <!-- Custom Total Scheme Amount Field for Advance Scheme -->
+                    <div class="mb-3" id="customAmountGroup">
+                        <label class="form-label text-danger">അഡ്വാൻസ് സ്കീം ആകെ തുക (ഉദാ: 890 അല്ലെങ്കിൽ 600)</label>
+                        <input type="number" class="form-control" id="editCustomTotal" placeholder="സ്കീം തുക നൽകുക">
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label">മുൻപത്തെ കുടിശ്ശിക ബാലൻസ് (₹)</label>
                         <input type="number" class="form-control" id="editBalance">
@@ -470,7 +477,7 @@
             let startDate = document.getElementById('startDate').value;
             let settleDate = document.getElementById('settleDate').value;
             
-            customers.push({ name, phone, address, paper, payType, startDate, settleDate, balance: 0, paidAmount: 0, paymentsList: [], stopDays: 0, status: 'Delivered' });
+            customers.push({ name, phone, address, paper, payType, startDate, settleDate, customTotal: 0, balance: 0, paidAmount: 0, paymentsList: [], stopDays: 0, status: 'Delivered' });
             document.getElementById('customerForm').reset();
             saveData();
             alert('കസ്റ്റമറെ വിജയകരമായി ചേർത്തു!');
@@ -530,7 +537,9 @@
                 let pObj = papers.find(p => p.name === c.paper);
                 let price = pObj ? pObj.price : 0;
                 let travel = pObj ? (pObj.travel || 0) : 0;
-                let itemTotal = price + travel;
+                
+                // If customTotal is set (like Advance scheme ₹890 or ₹600), use it as base amount
+                let baseAmount = (c.customTotal && c.customTotal > 0) ? Number(c.customTotal) : (price + travel);
                 
                 let balance = Number(c.balance) || 0;
                 
@@ -541,11 +550,10 @@
                 }
 
                 let stopDays = Number(c.stopDays) || 0;
-                
-                let dailyRate = itemTotal / 30;
+                let dailyRate = baseAmount / 30;
                 let deduction = Math.round(stopDays * dailyRate);
                 
-                let adjustedTotal = itemTotal - deduction;
+                let adjustedTotal = baseAmount - deduction;
                 if(adjustedTotal < 0) adjustedTotal = 0;
 
                 let totalDue = (adjustedTotal + balance) - totalPaid;
@@ -565,11 +573,10 @@
                     payBreakdownStr = `• ആകെ തന്നത്: ₹${totalPaid}`;
                 }
                 
-                // Messages based on Scheme Type
                 let billMsg, successMsg;
 
                 if (isAdvance) {
-                    billMsg = `📰 *അഡ്വാൻസ് സ്കീം ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nസ്കീം കാലാവധി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\nപ്രൊഡക്റ്റ്: '${c.paper}'\n\n• സ്കീം ആകെ തുക: ₹${price}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n\n*പെയ്മെന്റ് വിവരങ്ങൾ:*\n${payBreakdownStr}\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
+                    billMsg = `📰 *അഡ്വാൻസ് സ്കീം ബില്ല് വിവരങ്ങൾ*\n\nനമസ്കാരം *${c.name}*,\nസ്കീം കാലാവധി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\nപ്രൊഡക്റ്റ്: '${c.paper}'\n\n• സ്കീം ആകെ തുക: ₹${baseAmount}\n• ലീവ്/സ്റ്റോപ്പ് (${stopDays} ദിവസം): -₹${deduction}\n\n*പെയ്മെന്റ് വിവരങ്ങൾ:*\n${payBreakdownStr}\n\n*ആകെ നൽകാനുള്ള ബാക്കി: ₹${totalDue}*\n\n💳 *GPay / PhonePe:* ${gpayNumber}\n\nനന്ദി!`;
 
                     successMsg = `✅ *അഡ്വാൻസ് പെയ്മെന്റ് സ്വീകരിച്ചു - നന്ദി!*\n\nനമസ്കാരം *${c.name}*,\nനിങ്ങളുടെ '${c.paper}' പത്രത്തിന്റെ അഡ്വാൻസ് സ്കീം തുക പൂർണ്ണമായി ലഭിച്ചു എന്ന് സന്തോഷത്തോടെ അറിയിക്കുന്നു.\n\n• സ്കീം കാലാവധി: *${formattedStart}* മുതൽ *${formattedSettle}* വരെ\n*അടച്ച തുകകളുടെ വിവരം:*\n${payBreakdownStr}\n• *ആകെ അടച്ചത്: ₹${totalPaid}*\n• നിലവിലെ കുടിശ്ശിക: ₹0\n\nതുടർന്നുള്ള സഹകരണത്തിന് നന്ദി!\n🙏`;
                 } else {
@@ -582,7 +589,7 @@
 
                 billingBody.innerHTML += `<tr>
                     <td><strong>${c.name}</strong><br><small class="text-muted">${c.phone}</small><br><span class="badge bg-secondary" style="font-size: 10px;">${payTypeLabel}</span></td>
-                    <td>തുക: ₹${price}<br>തന്നത്: ₹${totalPaid}<br><strong>ബാക്കി: ₹${totalDue}</strong></td>
+                    <td>തുക: ₹${baseAmount}<br>തന്നത്: ₹${totalPaid}<br><strong>ബാക്കി: ₹${totalDue}</strong></td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary mb-1 w-100" onclick="openEditModal(${index})">✏️ എഡിറ്റ്</button>
                         <a href="https://wa.me/${c.phone}?text=${encodeURIComponent(billMsg)}" target="_blank" class="btn btn-sm btn-success mb-1 w-100">💬 ബില്ല് അയക്കുക</a>
@@ -619,6 +626,7 @@
             document.getElementById('editPhone').value = c.phone;
             document.getElementById('editAddress').value = c.address;
             document.getElementById('editPayType').value = c.payType || 'Monthly';
+            document.getElementById('editCustomTotal').value = c.customTotal || '';
             document.getElementById('editBalance').value = c.balance || 0;
             document.getElementById('editStopDays').value = c.stopDays || 0;
             document.getElementById('editStartDate').value = c.startDate || '';
@@ -671,6 +679,7 @@
             customers[index].phone = document.getElementById('editPhone').value;
             customers[index].address = document.getElementById('editAddress').value;
             customers[index].payType = document.getElementById('editPayType').value;
+            customers[index].customTotal = Number(document.getElementById('editCustomTotal').value) || 0;
             customers[index].balance = Number(document.getElementById('editBalance').value) || 0;
             customers[index].stopDays = Number(document.getElementById('editStopDays').value) || 0;
             customers[index].startDate = document.getElementById('editStartDate').value;
