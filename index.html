@@ -428,7 +428,6 @@
             
             document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
             
-            // Highlight correct nav item
             if(tabId === 'tab-dashboard') document.querySelectorAll('.bottom-nav-item')[0].classList.add('active');
             if(tabId === 'tab-customers') document.querySelectorAll('.bottom-nav-item')[1].classList.add('active');
             if(tabId === 'tab-delivery') document.querySelectorAll('.bottom-nav-item')[2].classList.add('active');
@@ -440,7 +439,6 @@
             window.scrollTo(0, 0);
         }
 
-        // Handle Back button to prevent accidental app exit
         window.addEventListener('popstate', function(event) {
             if (event.state && event.state.tab) {
                 switchTab(event.state.tab, false);
@@ -449,16 +447,21 @@
             }
         });
 
-        // Initialize default history state
         if (!history.state) {
             history.replaceState({tab: 'tab-dashboard'}, "", "#tab-dashboard");
         }
 
+        // Updated formatDate function to strictly output DD-MM-YYYY (ദിവസം-മാസം-വർഷം)
         function formatDate(dateStr) {
             if (!dateStr) return '-';
             let parts = dateStr.split('-');
             if (parts.length === 3) {
-                return `${parts[2]}-${parts[1]}-${parts[0]}`;
+                // If format is YYYY-MM-DD from input date
+                if (parts[0].length === 4) {
+                    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+                }
+                // If already DD-MM-YYYY
+                return dateStr;
             }
             return dateStr;
         }
@@ -691,6 +694,7 @@
             let c = customers[index];
             if(!c.paymentsList) c.paymentsList = [];
             
+            // Format new payment date strictly as DD-MM-YYYY (ദിവസം-മാസം-വർഷം)
             let d = new Date();
             let dateStr = String(d.getDate()).padStart(2, '0') + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + d.getFullYear();
             
@@ -702,27 +706,25 @@
             alert('₹' + amt + ' വിജയകരമായി കൂട്ടിച്ചേർത്തു!');
         }
 
-        // Reset Cycle for New Month / New Bill Period
         function resetPaymentCycle() {
             let index = document.getElementById('editIndex').value;
             let c = customers[index];
             
             if(confirm('ഈ കസ്റ്റമറുടെ പഴയ പെയ്മെന്റ് ഹിസ്റ്ററി ക്ലിയർ ചെയ്ത് അടുത്ത മാസത്തേക്ക് കണക്ക് പുതുക്കണോ?')) {
-                // If there is any remaining due, carry it as balance
                 let pObj = papers.find(p => p.name === c.paper);
                 let baseAmount = (c.customTotal && c.customTotal > 0) ? Number(c.customTotal) : ((pObj ? pObj.price : 0) + (pObj ? (pObj.travel || 0) : 0));
                 let totalPaid = c.paymentsList.reduce((sum, p) => sum + p.amount, 0);
                 let currentDue = (baseAmount + (Number(c.balance) || 0)) - totalPaid;
                 
                 if(currentDue > 0) {
-                    c.balance = currentDue; // Carry forward due as balance
+                    c.balance = currentDue;
                 } else {
                     c.balance = 0;
                 }
 
-                c.paymentsList = []; // Clear old payments
+                c.paymentsList = [];
                 c.paidAmount = 0;
-                c.stopDays = 0; // Reset stop days for new month
+                c.stopDays = 0;
                 
                 updatePaymentHistoryDisplay(c);
                 alert('പുതിയ മാസത്തേക്ക് കണക്ക് റീസെറ്റ് ചെയ്തു! ഇനി തീയതികൾ മാത്രം മാറ്റി സേവ് ചെയ്യുക.');
