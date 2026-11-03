@@ -76,7 +76,6 @@
             border: none;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        /* Perfect mobile table fitting */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -290,19 +289,19 @@
 
     <!-- BOTTOM NAVIGATION BAR -->
     <div class="bottom-nav">
-        <button class="bottom-nav-item active" onclick="switchTab('tab-dashboard', this)">
+        <button class="bottom-nav-item active" onclick="switchTab('tab-dashboard', true)">
             <span class="bottom-nav-icon">📊</span>
             ഡാഷ്‌ബോർഡ്
         </button>
-        <button class="bottom-nav-item" onclick="switchTab('tab-customers', this)">
+        <button class="bottom-nav-item" onclick="switchTab('tab-customers', true)">
             <span class="bottom-nav-icon">👥</span>
             ഉപയോക്താക്കൾ
         </button>
-        <button class="bottom-nav-item" onclick="switchTab('tab-delivery', this)">
+        <button class="bottom-nav-item" onclick="switchTab('tab-delivery', true)">
             <span class="bottom-nav-icon">🚚</span>
             ഡെലിവറി
         </button>
-        <button class="bottom-nav-item" onclick="switchTab('tab-payments', this)">
+        <button class="bottom-nav-item" onclick="switchTab('tab-payments', true)">
             <span class="bottom-nav-icon">💳</span>
             പേയ്‌മെന്റ്
         </button>
@@ -354,7 +353,7 @@
                         <label class="form-label text-success fw-bold">➕ പുതിയ പണം തന്നത് ചേർക്കുക</label>
                         <div class="row g-2">
                             <div class="col-7">
-                                <input type="number" class="form-control form-control-sm" id="newPayAmount" placeholder="തുക (ഉദാ: 890)">
+                                <input type="number" class="form-control form-control-sm" id="newPayAmount" placeholder="തുക">
                             </div>
                             <div class="col-5">
                                 <button type="button" class="btn btn-success btn-sm w-100" onclick="addNewPayment()">കൂട്ടുക</button>
@@ -362,6 +361,9 @@
                         </div>
                         <small class="text-muted d-block mt-2">ഇതുവരെയുള്ള പേയ്‌മെന്റ് വിവരങ്ങൾ:</small>
                         <div id="paymentHistoryText" class="small fw-bold text-dark mt-1">ഇതുവരെ തുകയൊന്നും തന്നിട്ടില്ല</div>
+                        
+                        <!-- Reset Cycle Button for New Month -->
+                        <button type="button" class="btn btn-outline-danger btn-sm w-100 mt-3" onclick="resetPaymentCycle()">🔄 പുതിയ മാസത്തേക്ക് കണക്ക് റീസെറ്റ് ചെയ്യുക</button>
                     </div>
 
                     <div class="mb-3">
@@ -420,13 +422,36 @@
         let customers = JSON.parse(localStorage.getItem('customers')) || [];
         let gpayNumber = "9495315236";
 
-        function switchTab(tabId, element) {
+        function switchTab(tabId, pushHistory = true) {
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('show', 'active'));
             document.getElementById(tabId).classList.add('show', 'active');
             
             document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
+            
+            // Highlight correct nav item
+            if(tabId === 'tab-dashboard') document.querySelectorAll('.bottom-nav-item')[0].classList.add('active');
+            if(tabId === 'tab-customers') document.querySelectorAll('.bottom-nav-item')[1].classList.add('active');
+            if(tabId === 'tab-delivery') document.querySelectorAll('.bottom-nav-item')[2].classList.add('active');
+            if(tabId === 'tab-payments') document.querySelectorAll('.bottom-nav-item')[3].classList.add('active');
+
+            if (pushHistory) {
+                history.pushState({tab: tabId}, "", "#" + tabId);
+            }
             window.scrollTo(0, 0);
+        }
+
+        // Handle Back button to prevent accidental app exit
+        window.addEventListener('popstate', function(event) {
+            if (event.state && event.state.tab) {
+                switchTab(event.state.tab, false);
+            } else {
+                switchTab('tab-dashboard', false);
+            }
+        });
+
+        // Initialize default history state
+        if (!history.state) {
+            history.replaceState({tab: 'tab-dashboard'}, "", "#tab-dashboard");
         }
 
         function formatDate(dateStr) {
@@ -677,6 +702,33 @@
             alert('₹' + amt + ' വിജയകരമായി കൂട്ടിച്ചേർത്തു!');
         }
 
+        // Reset Cycle for New Month / New Bill Period
+        function resetPaymentCycle() {
+            let index = document.getElementById('editIndex').value;
+            let c = customers[index];
+            
+            if(confirm('ഈ കസ്റ്റമറുടെ പഴയ പെയ്മെന്റ് ഹിസ്റ്ററി ക്ലിയർ ചെയ്ത് അടുത്ത മാസത്തേക്ക് കണക്ക് പുതുക്കണോ?')) {
+                // If there is any remaining due, carry it as balance
+                let pObj = papers.find(p => p.name === c.paper);
+                let baseAmount = (c.customTotal && c.customTotal > 0) ? Number(c.customTotal) : ((pObj ? pObj.price : 0) + (pObj ? (pObj.travel || 0) : 0));
+                let totalPaid = c.paymentsList.reduce((sum, p) => sum + p.amount, 0);
+                let currentDue = (baseAmount + (Number(c.balance) || 0)) - totalPaid;
+                
+                if(currentDue > 0) {
+                    c.balance = currentDue; // Carry forward due as balance
+                } else {
+                    c.balance = 0;
+                }
+
+                c.paymentsList = []; // Clear old payments
+                c.paidAmount = 0;
+                c.stopDays = 0; // Reset stop days for new month
+                
+                updatePaymentHistoryDisplay(c);
+                alert('പുതിയ മാസത്തേക്ക് കണക്ക് റീസെറ്റ് ചെയ്തു! ഇനി തീയതികൾ മാത്രം മാറ്റി സേവ് ചെയ്യുക.');
+            }
+        }
+
         function updateCustomer() {
             let index = document.getElementById('editIndex').value;
             customers[index].name = document.getElementById('editName').value;
@@ -725,7 +777,10 @@
             reader.readAsText(event.target.files[0]);
         }
 
-        window.onload = loadAppData;
+        window.onload = function() {
+            loadAppData();
+            switchTab('tab-dashboard', false);
+        };
     </script>
 </body>
 </html>
